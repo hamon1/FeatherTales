@@ -6,6 +6,8 @@ import './App.css';
 
 import Login from './Login';
 import Register from './Register';
+import Home from './pages/Home';
+import Customize from './pages/Customize';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path="/" element={<h1>Home Page</h1>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/customize" element={<Customize />} />
         </Routes>
       </div>
     </Router>

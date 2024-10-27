@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from './api'; // 서버와 통신을 위한 API 모듈을 import
 
 // 회원가입 컴포넌트
@@ -8,14 +9,20 @@ const Register = () => {
     const [email, setEmail] = useState(''); // 이메일 주소
     const [password, setPassword] = useState(''); // 비밀번호
 
+    const navigate = useNavigate();
+    
     // 회원가입 버튼을 눌렀을 때 실행되는 함수
     const handleRegister = async (e) => {
         e.preventDefault(); // 폼의 기본 동작인 새로고침을 방지
         try {
             // 서버로 회원가입 요청을 보냄
-            const response = await api.post('/register', { email, password });
+            await api.post('/register', { email, password });
+            
+            const response = await api.post('/login', { email, password });
+
             console.log(response); // 서버 응답을 콘솔에 출력
             // alert(response.data.message); // 서버의 메시지를 사용자에게 알림
+            navigate('/customize');
         } catch (error) {
             // 오류가 발생했을 때의 처리
             if (error.response) {

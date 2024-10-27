@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
+import { useNavigate } from'react-router-dom';
 import api from './api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const navigate = useNavigate();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await api.post('/login', { email, password });
             console.log(response);
-            alert(response.data.message);
+            // alert(response.data.message);
+            navigate('/home');
         } catch (error) {
             // 오류가 발생했을 때의 처리
             if (error.response) {
