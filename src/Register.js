@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from './api'; // 서버와 통신을 위한 API 모듈을 import
+import {api, loginUser, registerUser} from './api'; // 서버와 통신을 위한 API 모듈을 import
 
 // 회원가입 컴포넌트
 const Register = () => {
@@ -16,9 +16,12 @@ const Register = () => {
         e.preventDefault(); // 폼의 기본 동작인 새로고침을 방지
         try {
             // 서버로 회원가입 요청을 보냄
-            await api.post('/register', { email, password });
-            
-            const response = await api.post('/login', { email, password });
+            // await api.post('/register', { email, password });
+            await registerUser({email, password});
+
+            alert('Registration');
+            // const response = await api.post('/login', { email, password });
+            const response = await loginUser({email, password});
 
             console.log(response); // 서버 응답을 콘솔에 출력
             // alert(response.data.message); // 서버의 메시지를 사용자에게 알림
@@ -30,7 +33,7 @@ const Register = () => {
                 alert(error.response.data.msg);
             } else {
                 // 서버가 응답하지 않았거나 네트워크 오류
-                alert('네트워크 오류가 발생했습니다.'); // 네트워크 오류 메시지
+                alert('회원가입: 네트워크 오류가 발생했습니다.', error); // 네트워크 오류 메시지
             }
         }
     };

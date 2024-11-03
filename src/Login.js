@@ -1,19 +1,34 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { useNavigate } from'react-router-dom';
-import api from './api';
+import {api, loginUser, getUserData} from './api';
+import {UserContext} from './contexts/UserContext';
+
+import { UseFetchUserData } from './hooks/useFetchUserData';
 
 const Login = () => {
+    const { setUser } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    // const { userData, loading } = useFetchUserData(token);
+
+    // if (loading) return <p>Loading...</p>;
 
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/login', { email, password });
-            console.log(response);
-            // alert(response.data.message);
+            // const response = await api.post('/login', { email, password });
+            const response = await loginUser({ email, password }); // 로그인 API 호출
+
+            alert(response.token);
+            // console.log(response);
+            // alert(response.data);
+            // const userData = UseFetchUserData(response.token);
+            const userData = await getUserData(response.token);
+            alert(userData.email);
+            setUser(userData);
             navigate('/home');
         } catch (error) {
             // 오류가 발생했을 때의 처리
@@ -22,7 +37,7 @@ const Login = () => {
                 alert(error.response.data.msg);
             } else {
                 // 서버가 응답하지 않았거나 네트워크 오류
-                alert('네트워크 오류가 발생했습니다.'); // 네트워크 오류 메시지
+                alert('로그인: 네트워크 오류가 발생했습니다.'); // 네트워크 오류 메시지
             }
         }
     };
@@ -41,7 +56,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit">Login</button> {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}  {/* Button for form submission */}
+            <button type="submit">Login</button> 
         </form>
     )
 }
