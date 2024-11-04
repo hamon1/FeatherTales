@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.movement-space {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: aquamarine;
+}
+.avatar {
+  position: absolute;
+  background-color: black;
+  transition: transform 1s ease-out;
+  transform: translate(50px, 50px);
+}
