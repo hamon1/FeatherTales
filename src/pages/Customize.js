@@ -72,7 +72,7 @@ const Customize = () => {
             <h1>Customize Page</h1>
 
             <div class="view-avata-section">
-                <div class="view-avatar">
+                <div class="avatar">
                     <p>avatar</p>
                 </div>
                 <div class="user-name">

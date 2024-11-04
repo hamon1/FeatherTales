@@ -8,10 +8,14 @@ import { api } from './api';
 import logo from './logo.svg';
 import './App.css';
 
+import Main from './pages/main';
 import Login from './Login';
 import Register from './Register';
 import Home from './pages/Home';
 import Customize from './pages/Customize';
+import Profile from './pages/Profile';
+
+import { Header } from './Header';
 
 function App() {
   return (
@@ -43,16 +47,18 @@ function AppContent() {
   return (
     <Router>
       <div className="App">
-        <nav>
+        {/* <nav>
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
-        </nav>
+        </nav>*/}
+        <Header />
         <Routes>
-          <Route path="/" element={<h1>Home Page</h1>} />
+          <Route path="/" element={<Main/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/customize" element={<Customize />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>

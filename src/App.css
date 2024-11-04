@@ -37,17 +37,48 @@
   }
 }
 
+.room-space {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  /* background-color: #61dafb; */
+  background-image: url('./assets/test_background.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .movement-space {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   cursor: pointer;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
+}
+.avatar-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10;
 }
 .avatar {
   position: absolute;
-  background-color: black;
+  /* background-color: antiquewhite; */
+  background-image: url('./assets/test_avatar.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 120px;
+  height: 200px;
   transition: transform 1s ease-out;
   transform: translate(50px, 50px);
+  z-index: 10;
+}
+.click-component {
+  position: absolute;
+  z-index: 20;
+  width: 50px;
+  height: 50px;
+  background-color: blue;
 }

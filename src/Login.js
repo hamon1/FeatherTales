@@ -22,12 +22,12 @@ const Login = () => {
             // const response = await api.post('/login', { email, password });
             const response = await loginUser({ email, password }); // 로그인 API 호출
 
-            alert(response.token);
+            // alert(response.token);
             // console.log(response);
             // alert(response.data);
             // const userData = UseFetchUserData(response.token);
             const userData = await getUserData(response.token);
-            alert(userData.email);
+            // alert(userData.email);
             setUser(userData);
             navigate('/home');
         } catch (error) {
