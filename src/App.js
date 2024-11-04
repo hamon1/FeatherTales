@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { UserProvider } from './contexts/UserContext';
+import { UserContext } from './contexts/UserContext';
+
+import { api } from './api';
 
 import logo from './logo.svg';
 import './App.css';
@@ -12,47 +15,49 @@ import Customize from './pages/Customize';
 
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     {/* <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a> */}
-    //   </header>
-    // </div>
     <UserProvider>
-      <Router>
-        <div className="App">
-          {/* <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-          <p>Edit <code>src/App.js</code> and save to reload.</p> */}
-
-            <nav>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
-            </nav>
-          {/* </header> */}
-
-          <Routes>
-            <Route path="/" element={<h1>Home Page</h1>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/customize" element={<Customize />} />
-          </Routes>
-        </div>
-      </Router>
+      <AppContent />
     </UserProvider>
-
   );
 }
+
+function AppContent() {
+  const { setUser } = useContext(UserContext); 
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      api.get('/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        setUser(response.data);
+      })
+      .catch(error => {
+        console.error("failed to fetch user data", error.response?.data?.msg);
+        sessionStorage.removeItem('token');
+      });
+    }
+  }, []);
+
+  return (
+    <Router>
+      <div className="App">
+        <nav>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<h1>Home Page</h1>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/customize" element={<Customize />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
 
 export default App;

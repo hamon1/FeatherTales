@@ -3,10 +3,13 @@ import { UserContext } from '../contexts/UserContext';
 import { api } from '../api';
 import { useFetchUserData } from '../hooks/useFetchUserData';
 
+import { useNavigation } from '../utils/navigate';
+
 const Customize = () => { 
+    const { goToHome } = useNavigation();
     const { user, setUser } = useContext(UserContext);
     // const { userData, loading } = useFetchUserData(user.token);
-    const [nickname, setNickname] = useState(user?.username || 'randomName.data.nickname');
+    const [nickname, setNickname] = useState(user?.username || '');
     const [skinColor, setSkinColor] = useState(user?.avatar.skincolor)
     const [skinColor2, setSkinColor2] = useState(user?.avatar.skinColor2)
     const [eyeColor, setEyeColor] = useState(user?.avatar.eyeColor)
@@ -20,6 +23,11 @@ const Customize = () => {
             console.error("Failed to fetch random nickname", error);
         }
     };
+
+    const handleNicknameChange = (e) => {
+        setNickname(e.target.value);
+        // const newNickname = prompt("새 닉네임을 입력하세요", nickname);
+    }
 
     const handleSave = async () => {
         const token = sessionStorage.getItem('token');
@@ -48,11 +56,12 @@ const Customize = () => {
     }
 
     useEffect(() => {
-        if (!user?.username) {
+        if (!nickname) {
             fetchRandomNickname();
         }
     }, [user]);
 
+    // alert(user.avatar.skinColor);
 
     if (!user) return <p>Loading user data...</p>;
 
@@ -67,8 +76,16 @@ const Customize = () => {
                     <p>avatar</p>
                 </div>
                 <div class="user-name">
-                    <p>username: {nickname}</p>
-                    <button>닉네임 변경</button>
+                    {/* <p>username: {nickname}</p> */}
+                    <input 
+                    type = "text"
+                    value = {nickname}
+                    onChange={(e) => handleNicknameChange(e)}
+                    onFocus={(e) => setTimeout(() => {
+                        e.target.select()
+                    }, 0)}
+                    />
+                    {/* <button onClick={handleNicknameChange}>변경 확인</button> */}
                     <button onClick={fetchRandomNickname}>닉네임 랜덤 생성</button>
                 </div>
             </div>
@@ -99,6 +116,7 @@ const Customize = () => {
             </div>
 
             <button id="apply-changes" onClick={handleSave}>적용</button>
+            <button id="move-home" onClick={()=>goToHome()}>홈 화면 이동</button>
         </div>
     )
 }

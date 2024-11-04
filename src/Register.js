@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { useNavigation } from './utils/navigate'; // useNavigate Hook을 import
+
+// import {api} from './api'; // 서버와 통신을 위한 API 모��을 import
 import {api, loginUser, registerUser} from './api'; // 서버와 통신을 위한 API 모듈을 import
 
 // 회원가입 컴포넌트
@@ -9,7 +12,8 @@ const Register = () => {
     const [email, setEmail] = useState(''); // 이메일 주소
     const [password, setPassword] = useState(''); // 비밀번호
 
-    const navigate = useNavigate();
+    const { goToCustomize } = useNavigation();
+    // const navigate = useNavigate();
     
     // 회원가입 버튼을 눌렀을 때 실행되는 함수
     const handleRegister = async (e) => {
@@ -25,7 +29,8 @@ const Register = () => {
 
             console.log(response); // 서버 응답을 콘솔에 출력
             // alert(response.data.message); // 서버의 메시지를 사용자에게 알림
-            navigate('/customize');
+            // navigate('/customize');
+            goToCustomize();
         } catch (error) {
             // 오류가 발생했을 때의 처리
             if (error.response) {
