@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:4000/auth',
+    baseURL: 'http://localhost:4000/',
 });
 
 api.interceptors.request.use(config => {
@@ -14,7 +14,7 @@ api.interceptors.request.use(config => {
 
 export const registerUser = async (userData) => {
     // try {
-        const response = await api.post(`/register`, userData);
+        const response = await api.post(`/auth/register`, userData);
         return response.data;
     // } catch (error) {
     //     throw error.response.data;
@@ -23,7 +23,7 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (credentials) => {
     // try {
-        const response = await api.post(`/login`, credentials);
+        const response = await api.post(`/auth/login`, credentials);
         sessionStorage.setItem('token', response.data.token);
         return response.data;
     // } catch (error) {
@@ -38,7 +38,7 @@ export const logoutUser = () => {
 
 export const getUserData = async (token) => {
     try {
-    const response = await api.get(`/user`, {
+    const response = await api.get(`/auth/user`, {
         headers: { Authorization: `Bearer ${token}`}
     });
     return response.data;
@@ -47,3 +47,40 @@ export const getUserData = async (token) => {
         // return error.response.data.msg;
     }
 };
+
+export const createDoc = async (token, docData) => {
+    console.log(token, docData);
+    const response = await api.post('/documents/newdoc', docData, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const updateDoc = async (token, docid, docData) => {
+    const response = await api.put(`/documents/updateDoc?docid=${docid}`, docData, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const deleteDoc = async (docId) => {
+    // const response = await api.delete(`/
+}
+
+export const searchDocs = async (query) => {
+
+}
+
+export const getDocs = async (token, userid) => {
+    const response = await api.get(`/documents/getDocument?userid=${userid}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const getDocsbyDocId = async (token, docId) => {
+    const response = await api.get(`/documents/getDocumentbyid/${docId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}

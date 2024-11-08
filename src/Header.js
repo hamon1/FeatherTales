@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from 'react-router-dom'
 import { UserContext } from './contexts/UserContext';
 import { useNavigation } from "./utils/navigate";
+import './App.css';
 
 export const Header = () => {
     const { user, logout } = useContext(UserContext);

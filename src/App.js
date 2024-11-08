@@ -14,6 +14,8 @@ import Register from './Register';
 import Home from './pages/Home';
 import Customize from './pages/Customize';
 import Profile from './pages/Profile';
+import Library from './pages/Library';
+import Docview from './pages/Docview';
 
 import { Header } from './Header';
 
@@ -31,7 +33,7 @@ function AppContent() {
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
-      api.get('/user', {
+      api.get('/auth/user', {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
@@ -59,6 +61,9 @@ function AppContent() {
           <Route path="/home" element={<Home />} />
           <Route path="/customize" element={<Customize />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/library" element={<Library />} />
+          {/* <Route path="/docview" element={<Docview />} /> */}
+          <Route path="/docview/:docId" element={<Docview />} />
         </Routes>
       </div>
     </Router>
