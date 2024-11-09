@@ -1,9 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { api, createDoc, updateDoc, getDocsbyDocId } from '../api';
 import { UserContext } from '../contexts/UserContext';
+// import { UserService } from '../services/UserService';
 
 import { useNavigation } from '../utils/navigate';
 import { useParams } from 'react-router-dom';
+
+import { handleDeleteDoc } from '../utils/docUtils';
+import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
     // console.log(docId);
@@ -11,6 +15,7 @@ const Docview = () => {
     const { goToHome, goToLibrary } = useNavigation();
     
     const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
+    const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
 
     const [docData, setDocData] = useState('');
     const [title, setTitle] = useState('');
@@ -29,19 +34,30 @@ const Docview = () => {
                 console.log('Fetching');
                 try {
                     const data = await getDocsbyDocId(token, docId);
-                    console.log(data);
-                    setTitle(data.document.title);
-                    setContent(data.document.content);
+                    console.log('docs data: ', data);
+                    
+                    if (data) {
+                        setIsEditing(true);
+                        setTitle(data.document.title);
+                        console.log('title: ', data.document.title);
+                        setContent(data.document.content);
+                    } else {
+                        setIsEditing(false);
+                    }
+
+
                 } catch (error) {
                     console.error('Failed to fetch document', error.response.data.msg);
                 }
             };
             fetchDocData();
+            
         }
     }, [docId, token]);
     
     
     const handleDocData = async () => {
+        console.log(isEditing);
         const data = {
             userid: user.userid,
             title: title,
@@ -86,7 +102,7 @@ const Docview = () => {
                 </div>
                 <div class="actions">
                     <button onClick={() => handleDocData().then(console.log('저장 완료!'))}>저장</button>
-                    <button onClick={() => alert('doc 삭제!')}>삭제</button>
+                    <button onClick={() => handleDeleteDoc(token, docId, setDocs).then(goToLibrary())}>삭제</button>
                     <button onClick={() => goToLibrary()}>뒤로가기</button>
                 </div>
             </div>

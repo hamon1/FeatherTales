@@ -63,8 +63,11 @@ export const updateDoc = async (token, docid, docData) => {
     return response.data;
 }
 
-export const deleteDoc = async (docId) => {
-    // const response = await api.delete(`/
+export const deleteDoc = async (token, docId) => {
+    const response = await api.delete(`/documents/deleteDoc/${docId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
 }
 
 export const searchDocs = async (query) => {

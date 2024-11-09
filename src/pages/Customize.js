@@ -17,7 +17,7 @@ const Customize = () => {
 
     const fetchRandomNickname = async() => {
         try {
-            const response = await api.get('/random-nickname');
+            const response = await api.get('/auth/random-nickname');
             setNickname(response.data.nickname);
         } catch (error) {
             console.error("Failed to fetch random nickname", error);
@@ -46,7 +46,7 @@ const Customize = () => {
                 eyeColor: eyeColor,
                 hairStyle: hairStyle,
             };
-            await api.put('/update-avatar', updatedAvatar)
+            await api.put('/auth/update-avatar', updatedAvatar)
 
             setUser((prev) => ({ ...prev, ...updatedAvatar}))
             alert('변경되었습니다.');

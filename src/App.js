@@ -2,6 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { UserProvider } from './contexts/UserContext';
 import { UserContext } from './contexts/UserContext';
+import { DocsContext } from './contexts/DocContext';
+import { DocsProvider } from './contexts/DocContext';
 
 import { api } from './api';
 
@@ -22,13 +24,16 @@ import { Header } from './Header';
 function App() {
   return (
     <UserProvider>
-      <AppContent />
+      <DocsProvider>
+        <AppContent />
+      </DocsProvider>
     </UserProvider>
   );
 }
 
 function AppContent() {
   const { setUser } = useContext(UserContext); 
+
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
