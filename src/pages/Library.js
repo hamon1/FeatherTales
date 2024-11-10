@@ -96,7 +96,7 @@ const Library = () => {
         {isLoading ? (
             <LoadingPage isLoading={isLoading}/>
         ):
-        <div>
+        <div class="library-background">
             <h1>Library Page</h1>
             <div>
                 <button onClick={()=> handleCreateDoc()}>+</button>

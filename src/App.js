@@ -18,6 +18,7 @@ import Customize from './pages/Customize';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
 import Docview from './pages/Docview';
+import Mailbox from './pages/Mailbox';
 
 import { Header } from './Header';
 
@@ -69,6 +70,7 @@ function AppContent() {
           <Route path="/library" element={<Library />} />
           {/* <Route path="/docview" element={<Docview />} /> */}
           <Route path="/docview/:docId" element={<Docview />} />
+          <Route path="/mailbox" element={<Mailbox />} />
         </Routes>
       </div>
     </Router>

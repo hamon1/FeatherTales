@@ -69,9 +69,9 @@ const Customize = () => {
 
     return (
         <div class="customize-page">
-            <h1>Customize Page</h1>
+            {/* <h1>Customize Page</h1> */}
 
-            <div class="view-avata-section">
+            <div class="view-avatar-section">
                 <div class="avatar">
                     <p>avatar</p>
                 </div>
@@ -93,30 +93,33 @@ const Customize = () => {
             {/* Customize UI components or features here */}
 
             <div class="customize-section">
-                <label for="skin-color">Skin Color:</label>
-                <input type="color" id="skin-color" name="skin-color" defaultValue={user.avatar.skinColor} onChange={(e) => setSkinColor(e.target.value)}/>
-                <label for="skin-color2">Skin2 Color:</label>
-                <input type="color" id="skin-color2" name="skin-color2" defaultValue={user.avatar.skinColor2} onChange={(e) => setSkinColor2(e.target.value)}/>
-                <label for="eyes-color">Eyes Color:</label>
-                <input type="color" id="eyes-color" name="eyes-color" defaultValue={user.avatar.eyeColor} onChange={(e) => setEyeColor(e.target.value)}/>
-            </div>
 
-            <div class="customize-section">
-                <label for="clothing" name="clothing">Clothing:</label>
-                <select id="clothing" name="clothing" >
-                    <option value="tshirt">T-Shirt</option>
-                </select>
-            </div>
-            
-            <div class="customize-section">
-                <label for="hairstyle" name="hairstyle">Hair:</label>
-                <select id="hairstyle" name="hairstyle">
-                    <option value="default">default</option>
-                </select>
-            </div>
+                <div class="customize">
+                    <label for="skin-color">Skin Color:</label>
+                    <input type="color" id="skin-color" name="skin-color" defaultValue={user.avatar.skinColor} onChange={(e) => setSkinColor(e.target.value)}/>
+                    <label for="skin-color2">Skin2 Color:</label>
+                    <input type="color" id="skin-color2" name="skin-color2" defaultValue={user.avatar.skinColor2} onChange={(e) => setSkinColor2(e.target.value)}/>
+                    <label for="eyes-color">Eyes Color:</label>
+                    <input type="color" id="eyes-color" name="eyes-color" defaultValue={user.avatar.eyeColor} onChange={(e) => setEyeColor(e.target.value)}/>
+                </div>
 
-            <button id="apply-changes" onClick={handleSave}>적용</button>
-            <button id="move-home" onClick={()=>goToHome()}>홈 화면 이동</button>
+                <div class="customize">
+                    <label for="clothing" name="clothing">Clothing:</label>
+                    <select id="clothing" name="clothing" >
+                        <option value="tshirt">T-Shirt</option>
+                    </select>
+                </div>
+                
+                <div class="customize">
+                    <label for="hairstyle" name="hairstyle">Hair:</label>
+                    <select id="hairstyle" name="hairstyle">
+                        <option value="default">default</option>
+                    </select>
+                </div>
+
+                <button id="apply-changes" onClick={handleSave}>적용</button>
+                <button id="move-home" onClick={()=>goToHome()}>홈 화면 이동</button>
+            </div>
         </div>
     )
 }

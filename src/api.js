@@ -87,3 +87,31 @@ export const getDocsbyDocId = async (token, docId) => {
     });
     return response.data;
 }
+
+export const getFriendRequest = async (token, toUserId) => {
+    const response = await api.get(`/friends/getFriend-requests?toUserId=${toUserId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const friendRequest = async (token, requestData) => {
+    const response = await api.post(`/friends/friend-request`, requestData, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const acceptFriendRequest = async (token, requestId) => {
+    const response = await api.put(`/friends/accept?requestId=${requestId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const searchFriend = async (token, keyword) => {
+    const response = await api.get(`/friends/search?keyword=${keyword}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
