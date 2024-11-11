@@ -31,10 +31,16 @@ const Customize = () => {
 
     const handleSave = async () => {
         const token = sessionStorage.getItem('token');
-        console.log(token);
+        // console.log(token);
 
         if (!token) {
             console.error('토큰 없음');
+            return;
+        }
+
+        console.log(nickname.length);
+        if (nickname.length < 2) {
+            alert('닉네임은 두 글자 이상이어야 합니다.');
             return;
         }
         

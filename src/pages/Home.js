@@ -61,7 +61,7 @@ const Home = () => {
             if (clickRef.current) {
                 const clickWidth = clickRef.current ? clickRef.current.offsetWidth : 0;
                 const clickHeight = clickRef.current? clickRef.current.offsetHeight : 0;
-                console.log(clickWidth, clickHeight);
+                // console.log(clickWidth, clickHeight);
                 setClickPosition({x: x - clickWidth/2, y: y - clickHeight/2});
 
                 // setShowClickComponent(true);
