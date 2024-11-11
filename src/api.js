@@ -115,3 +115,10 @@ export const searchFriend = async (token, keyword) => {
     });
     return response.data;
 }
+
+export const getFriendsData = async (token, batch) => {
+    const response = await api.post(`/friends/getFriendsData`,  batch , {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}

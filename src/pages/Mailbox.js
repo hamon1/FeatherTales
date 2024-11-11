@@ -5,11 +5,17 @@ import { api, getFriendRequest, friendRequest, acceptFriendRequest } from '../ap
 
 import LoadingPage from './LoadingPage';
 
+import { friendsListBatch } from '../utils/friendUtils'
+
 const Mailbox = () => {
     const { user } = useContext(UserContext);
     const [friendRequests, setFriendRequests] = useState([]);
 
     const [friends, setFriends] = useState([]);
+    const [friendsData, setFriendsData] = useState([]);
+    const [ currentPage, setCurrentPage] = useState(0);
+    const [ totalPages, setTotalPages] = useState(0);
+
 
     const [ isLoading, setIsLoading ] = useState(false);
     const [ isReload, setIsReload ] = useState(false);
@@ -22,6 +28,10 @@ const Mailbox = () => {
             const res = await getFriendRequest(token, user.userid);
             console.log('Friend request', res);
             setFriendRequests(res);
+
+
+            // setFriends(friendlist);
+
         } catch (error) {
             console.log('error get request:', error.response.data.msg);
         }
@@ -52,10 +62,11 @@ const Mailbox = () => {
         }
     }
     const friendsList = () => {
-        if (friends.length === 0) {
-            return <div>요청이 없습니다.</div>
+
+        if (!friendsData || friendsData.length === 0) {
+            return <div>친구가 없어요.</div>
         } else {
-            return friends.map((data, index) => (
+            return friendsData.map((data, index) => (
                 <div key={index}>
                     {data.username}
                     <button onClick={() => console.log('거절')}>거절</button>
@@ -64,6 +75,39 @@ const Mailbox = () => {
         }
     }
 
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            // setCurrentPage(currentPage + 1);
+            // fetchFriend(currentPage);
+            setCurrentPage(prevPage => {
+                const newPage = prevPage + 1;
+                fetchFriend(newPage);
+                return newPage;
+            });
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            // setCurrentPage(currentPage - 1);
+            // fetchFriend(currentPage );
+            setCurrentPage(prevPage => {
+                const newPage = prevPage - 1;
+                fetchFriend(newPage);
+                return newPage;
+            });
+        }
+    };
+
+
+    const fetchFriend = async (page) => {
+        console.log('friend?', friends);
+        const friendlist = await friendsListBatch({friendsList: friends, page: page, token: token});
+        console.log('Friend request!!', friendlist);
+        setFriendsData(friendlist);
+
+        setTotalPages(Math.ceil(friendlist.length/10));
+    }
     useEffect(() => {
         if (user) {
             setIsLoading(false);
@@ -71,13 +115,22 @@ const Mailbox = () => {
             console.log(user);
             setFriends(user.friends);
 
-            // const res = getFriendRequest(token, user.userid);
+            fetchFriend(currentPage)
 
-            // setFriendRequests(res);
         } else {
             setIsLoading(true);
         }
     }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            setIsLoading(false);
+
+            fetchFriend(currentPage)
+        } else {
+            setIsLoading(true);
+        }
+    }, [friends]);
 
     return (
         <>
@@ -93,8 +146,24 @@ const Mailbox = () => {
                 ):
                 <div>새로 고침</div>
                 }
-                <p>친구 목록</p>
-                {friendsList()}
+                <div>
+                    <p>친구 목록</p>
+                    <div>
+                        <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+                            이전 페이지
+                        </button>
+                        <span>
+                            페이지 {currentPage + 1} / {totalPages + 1}
+                        </span>
+                        <button
+                            onClick={handleNextPage}
+                            disabled={currentPage === totalPages}
+                        >
+                            다음 페이지
+                        </button>
+                    </div>
+                    {friendsList()}
+                </div>
             </div>
 
 }
