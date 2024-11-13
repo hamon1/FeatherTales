@@ -7,6 +7,7 @@ import { useNavigation } from '../utils/navigate';
 
 const Customize = () => { 
     const { goToHome } = useNavigation();
+
     const { user, setUser } = useContext(UserContext);
     // const { userData, loading } = useFetchUserData(user.token);
     const [nickname, setNickname] = useState(user?.username || '');
@@ -41,6 +42,11 @@ const Customize = () => {
         console.log(nickname.length);
         if (nickname.length < 2) {
             alert('닉네임은 두 글자 이상이어야 합니다.');
+            return;
+        }
+        //닉네임에 특수 기호 못 쓰게 (특히 '#')
+        if (nickname.includes('#')) {
+            alert('닉네임에 \'#\'을 사용할 수 없습니다.');
             return;
         }
         
@@ -85,7 +91,7 @@ const Customize = () => {
                     {/* <p>username: {nickname}</p> */}
                     <input 
                     type = "text"
-                    value = {nickname}
+                    value = {nickname.split("#")[0]}
                     onChange={(e) => handleNicknameChange(e)}
                     onFocus={(e) => setTimeout(() => {
                         e.target.select()

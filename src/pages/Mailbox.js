@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import { useNavigation } from '../utils/navigate'
 
-import { api, getFriendRequest, friendRequest, acceptFriendRequest } from '../api';
+import { api, getFriendRequest, friendRequest, acceptFriendRequest, searchFriend } from '../api';
 
 import LoadingPage from './LoadingPage';
 
@@ -11,14 +12,18 @@ const Mailbox = () => {
     const { user } = useContext(UserContext);
     const [friendRequests, setFriendRequests] = useState([]);
 
+    const { goToLogin } = useNavigation();
+
     const [friends, setFriends] = useState([]);
     const [friendsData, setFriendsData] = useState([]);
     const [ currentPage, setCurrentPage] = useState(0);
     const [ totalPages, setTotalPages] = useState(0);
 
-
     const [ isLoading, setIsLoading ] = useState(false);
     const [ isReload, setIsReload ] = useState(false);
+
+    const [ query, setQuery ] = useState();
+    const [searchResult, setSearchResult] = useState([]);
 
     const { token } = sessionStorage.getItem('token');
 
@@ -38,10 +43,10 @@ const Mailbox = () => {
         setIsReload(false);
     }
 
-    const handleSendRequest = async() => {
-        console.log('친구 요청!');
+    const handleSendRequest = async(userid) => {
+        console.log('친구 요청!', userid);
         try {
-            const res = friendRequest(token, { toUserId: 'f109d85b-504f-4727-84bb-c8e8cd52f384', fromUserId: user.userid, fromUserNickname: user.username})
+            const res = await friendRequest(token, { toUserId: userid, fromUserId: user.userid, fromUserNickname: user.username})
             console.log('친구 요청', res);
         } catch (error) {
             console.log('error send request:', error.response.data.msg);
@@ -69,7 +74,7 @@ const Mailbox = () => {
             return friendsData.map((data, index) => (
                 <div key={index}>
                     {data.username}
-                    <button onClick={() => console.log('거절')}>거절</button>
+                    <button onClick={() => console.log('삭제')}>삭제</button>
                 </div>
             ))
         }
@@ -108,6 +113,61 @@ const Mailbox = () => {
 
         setTotalPages(Math.ceil(friendlist.length/10));
     }
+
+    const handleSearch = async () => {
+        console.log('searchFriend', query);
+
+        if (!query) {
+            alert('검색어를 입력하세요.');
+            return;
+        } else {
+            const [name_query, id_query ] = query.split('#');
+            console.log('검색어: ', name_query, id_query);
+
+            // if (id_query && id_query.length === 6) {
+            //     await searchFriend(token, query);
+            //     return;
+            // }
+
+            if (id_query && id_query.length !== 6) {
+                alert('ID는 6자리로 입력하세요.');
+                return;
+            } else if (name_query && name_query.length < 2) {
+                alert('닉네임은 3글자 이상 입력하세요.');
+                return;
+            }   
+
+            try {
+                const result = await searchFriend(token, query);
+    
+                console.log('검색 결과: ', result);
+                setSearchResult(result);
+
+                console.log('result: ', searchResult);
+            } catch (error) {
+                console.log('검색 중 에러: ', error.response.data.msg);
+            }
+        }
+
+    }
+
+    const searchedFriend = () => {
+        if (searchResult.length > 0) {
+            return searchResult.map(item => (
+                    <>
+                        <div key={item.userid}>
+                            {item.username}
+                            <button onClick={() => handleSendRequest(item.userid)}>친구 추가</button>
+                        </div>
+                    </>
+                )
+            );
+        }
+        else {
+            return <div>검색 결과가 없습니다.</div>
+        }
+    }
+
     useEffect(() => {
         if (user) {
             setIsLoading(false);
@@ -137,8 +197,18 @@ const Mailbox = () => {
         {isLoading ? (
             <LoadingPage/>
         ): 
-            <div class="mailbox-content" onClick={(e) => e.stopPropagation()}>
+            <div class="modal-content mailbox" onClick={(e) => e.stopPropagation()}>
                 <h1>mailbox Page</h1>
+                <div class="search-friend">
+                    <input 
+                        type="text" 
+                        placeholder="친구 찾기" 
+                        value={query} 
+                        onChange={e => setQuery(e.target.value)}
+                        />
+                    <button onClick={() => handleSearch()}>검색</button>
+                    {searchedFriend()}
+                </div>
                 <button onClick={handleSendRequest}>친구 요청</button>
                 <button onClick={handleGetRequests}>친구 요청 새로고침</button>
                 {!isReload ? (

@@ -109,8 +109,10 @@ export const acceptFriendRequest = async (token, requestId) => {
     return response.data;
 }
 
-export const searchFriend = async (token, keyword) => {
-    const response = await api.get(`/friends/search?keyword=${keyword}`, {
+export const searchFriend = async (token, query) => {
+    // console.log('searching', query);
+    const encodeQuery = encodeURIComponent(query);
+    const response = await api.get(`/friends/searchFriend?query=${encodeQuery}`, {
         headers: { Authorization: `Bearer ${token}`}
     });
     return response.data;

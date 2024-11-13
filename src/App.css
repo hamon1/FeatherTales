@@ -47,6 +47,13 @@
   display: flex;
   z-index: 10;
 }
+.modal-content {
+  background: white;
+  padding: 20px;
+  margin: 80px 100px 80px 100px;
+  width: 100%;
+  
+}
 /* modal css end ----------------------------------------------------------------*/
 
 /*Header.js----------------------------------------------------------------*/
@@ -188,12 +195,8 @@ header ul li button:hover {
 }
 /* Home End---------------------------------------------------------------- */
 /* mailbox.js ----------------------------------------------------------------*/
-.mailbox-content {
-  background: white;
-  padding: 20px;
-  margin: 80px 100px 80px 100px;
-  width: 100%;
-  touch-action: none;
+.mailbox {
+  
 }
 /* mailbox end----------------------------------------------------------------*/
 /* Customize.js----------------------------------------------------------------*/
