@@ -25,8 +25,8 @@ const Home = () => {
     const centerY = window.innerHeight / 2;
     
     const [position, setPosition] = useState({ x: centerX, y: centerY });
-    const [clickPosition, setClickPosition] = useState();
-    const [showClickComponent, setShowClickComponent] = useState(false);
+    const [clickPosition, setClickPosition] = useState({ x: -1000, y:  -1000});
+    const [showClickComponent, setShowClickComponent] = useState(true);
     
     const objectMainDoorRef = useRef(null);
     const [positionMainDoor, setPositionMainDoor] = useState({ x: 50, y: 50 });
@@ -38,39 +38,98 @@ const Home = () => {
     
     const [isMailboxVisible, setIsMailbaxVisible] = useState(false);
 
+    const [backgroundPosition, setBackgroundPosition] = useState(0); // -1, 0, 1
+    const backgroundRef = useRef(null);
+
+
     const handleNavigate = () => {
         // navigate('/customize');
         goToCustomize(); // useNavigation Hook instead of useNavigate()
     }
-    
+    // setShowClickComponent(true);
     const handleClick = (event) => {
+        if (!backgroundRef.current) return;
+
+        const backgroundRect = backgroundRef.current.getBoundingClientRect();
+
+        const clickx = event.clientX - backgroundRect.left; // 배경 위치 (배경 기준 좌표)
+        const clicky = event.clientY - backgroundRect.top;
+
+        const screenWidth = window.innerWidth;
+        const threshold = screenWidth * 0.2; // 양 긑 20% 영역
+
+        const maxMovement = Math.max(backgroundRect.width - screenWidth, 0); // 최대 이동 가능 거리
+
+        let newBackgroundPosition = backgroundPosition;
+
+        // 클릭 위치 왼쪽 끝 인접
+        if (clickx < threshold && backgroundPosition > 0) {
+            newBackgroundPosition =  backgroundPosition - 0.5; // 왼쪽으로 한 칸
+            // newBackgroundPosition = Math.min(backgroundPosition + screenWidth / 2, 0);
+        }
+        // 클릭 위치 오른쪽 끝 인점
+        else if (clickx > screenWidth - threshold && backgroundPosition < 1) {
+            newBackgroundPosition = backgroundPosition + 0.5; // 오른쪽으로 한 칸
+            // newBackgroundPosition = Math.max(backgroundPosition - screenWidth / 2, -maxMovement);
+        }
+
+        setBackgroundPosition(newBackgroundPosition);
+
+        const avatarWidth = avatarRef.current ? avatarRef.current.offsetWidth : 0;
+        const avatarHeight = avatarRef.current ? avatarRef.current.offsetHeight : 0;
+        setPosition({
+            x: clickx - avatarWidth/2,
+            y: clicky - avatarHeight,
+        })
+
         const container = event.currentTarget.getBoundingClientRect();
         
         const x = event.clientX;
         const y = event.clientY - container.top;
         
-        const avatarWidth = avatarRef.current ? avatarRef.current.offsetWidth : 0;
-        const avatarHeight = avatarRef.current ? avatarRef.current.offsetHeight : 0;
-        setPosition({ x: x - avatarWidth/2, y: y - avatarHeight });
+        // setPosition({ x: x - avatarWidth/2, y: y - avatarHeight });
 
-        setClickPosition({ x: -1000, y: -1000 });
+        setClickPosition({ x, y })
+        console.log(x, y);
+        console.log(clickPosition.x, clickPosition.y);
 
-        setShowClickComponent(true);
+        setShowClickComponent(true); // 클릭 효과 표시
 
-        setTimeout(() => {
-            if (clickRef.current) {
-                const clickWidth = clickRef.current ? clickRef.current.offsetWidth : 0;
-                const clickHeight = clickRef.current? clickRef.current.offsetHeight : 0;
-                // console.log(clickWidth, clickHeight);
-                setClickPosition({x: x - clickWidth/2, y: y - clickHeight/2});
+        // 0.5초 후 클릭 효과 제거 (애니메이션 시간과 맞춤)
+        setTimeout(() => setShowClickComponent(false), 500);
+
+        // setTimeout(() => setClickPosition({x: -1000, y: -1000}), 1000);
+
+
+        // // setTimeout(() => {
+        //     if (clickRef.current) {
+        //         const clickWidth = clickRef.current ? clickRef.current.offsetWidth : 0;
+        //         const clickHeight = clickRef.current? clickRef.current.offsetHeight : 0;
+        //         // console.log(clickWidth, clickHeight);
+        //         setClickPosition({x: x - clickWidth/2, y: y - clickHeight/2});
 
                 // setShowClickComponent(true);
 
-                setTimeout(() => {
-                    setShowClickComponent(false);
-                }, 1000);
-            }
-        }, 0)
+            //     const cx = event.clientX - container.left;
+
+            //     const moveX = (cx - container.width / 2) * 0.5; // 배경이 아바타보다 더 느리게 움직이도록 비율 설정
+
+            //     console.log(cx);
+            //     console.log(container.width);
+
+            //     console.log(moveX);
+            //     // console.log(window.innerWidth);
+            //     // console.log(clickWidth);
+            //     // console.log(clickPosition.x);
+            //     // if (clickWidth > window.innerWidth * 0.8) {
+            //         setBackgroundPosition({ x: clickWidth, y: backgroundPosition.y });
+            //     // }
+
+            //     setTimeout(() => {
+            //         setShowClickComponent(false);
+            //     }, 1000);
+            // }
+        // }, 0)
 
     };
     
@@ -133,6 +192,13 @@ const Home = () => {
             //     }, 2000);
             // }
         };
+        useEffect(() => {
+            if (clickPosition.x !== -1000 && clickPosition.y !== -1000) {
+                console.log("Updated click position:", clickPosition);
+            }
+
+        }, [clickPosition]);
+        
 
         useEffect(() => {
             if (user) {
@@ -180,7 +246,12 @@ const Home = () => {
                 {/* {header()} */}
                 {/* <h1>Wellcome Home!</h1> */}
                 {/* <button onClick={handleNavigate}>커스텀!</button> */}
-                <div class="room-space">
+                <div 
+                class="room-space" 
+                style={{ 
+                    backgroundPosition: `${backgroundPosition * 100}% 0`, 
+                    // backgroundPosition: `${backgroundPosition}px 0`,
+                }}>
                     <div class="main object-door" ref={objectMainDoorRef}>
                         <div class="door">
                         </div>
@@ -207,7 +278,7 @@ const Home = () => {
                             <p>나는 달력이다!</p>
                         </div>
                     </div>
-                    <div class="movement-space" onClick={handleClick}>
+                    <div ref={backgroundRef} class="movement-space" onClick={handleClick}>
                         <div class="avatar-box">
                             <div 
                                 className="avatar"
@@ -224,13 +295,17 @@ const Home = () => {
                                 <div 
                                 className="click-component"
                                 ref={clickRef}
+                                // style={{
+                                //     transform: `translate(${clickPosition.x}px, ${clickPosition.y}px)`,
+                                // }}
                                 style={{
-                                    transform: `translate(${clickPosition.x}px, ${clickPosition.y}px)`,
+                                    top: clickPosition.y - 50, // 클릭 위치 중앙에 배치
+                                    left: clickPosition.x - 50,
                                 }}
                                 >
                                     
                                 </div>
-                            )}
+                            )} 
                         </div>
                     </div>
                 </div>

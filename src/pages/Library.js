@@ -97,17 +97,19 @@ const Library = () => {
             <LoadingPage isLoading={isLoading}/>
         ):
         <div class="library-background">
-            <h1>Library Page</h1>
-            <div>
-                <button onClick={()=> handleCreateDoc()}>+</button>
-            </div>
-            <div>
-            <div class="avatar library">
-                    <p>avatar</p>
+            <div class="library-container">
+                <h1>Library Page</h1>
+                <div>
+                    <button onClick={()=> handleCreateDoc()}>+</button>
                 </div>
-            </div>
-            <div class="bookcase">
-                {docListComponent(docs)}
+                <div>
+                {/* <div class="avatar library">
+                        <p>avatar</p>
+                    </div> */}
+                </div>
+                <div class="bookcase">
+                    {docListComponent(docs)}
+                </div>
             </div>
         </div>
     }

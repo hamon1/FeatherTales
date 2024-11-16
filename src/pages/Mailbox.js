@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import { useNavigation } from '../utils/navigate'
 
-import { api, getFriendRequest, friendRequest, acceptFriendRequest, searchFriend } from '../api';
+import { api, getFriendRequest, friendRequest, acceptFriendRequest, searchFriend, rejectFriendRequest, deleteFriend } from '../api';
 
 import LoadingPage from './LoadingPage';
 
@@ -46,7 +46,7 @@ const Mailbox = () => {
     const handleSendRequest = async(userid) => {
         console.log('친구 요청!', userid);
         try {
-            const res = await friendRequest(token, { toUserId: userid, fromUserId: user.userid, fromUserNickname: user.username})
+            const res = await friendRequest(token, { toUserId: userid })
             console.log('친구 요청', res);
         } catch (error) {
             console.log('error send request:', error.response.data.msg);
@@ -60,21 +60,21 @@ const Mailbox = () => {
             return friendRequests.map((data, index) => (
                 <div key={index}>
                     {data.fromUserNickname}
-                    <button onClick={() => acceptFriendRequest(token, data._id)}>수락</button>
-                    <button onClick={() => console.log('거절')}>거절</button>
+                    <button onClick={() => acceptFriendRequest(token, data._id).then(fetchFriend())}>수락</button>
+                    <button onClick={() => rejectFriendRequest(token, data._id)}>거절</button>
                 </div>
             ))
         }
     }
     const friendsList = () => {
-
+        console.log(friendsData);
         if (!friendsData || friendsData.length === 0) {
             return <div>친구가 없어요.</div>
         } else {
             return friendsData.map((data, index) => (
                 <div key={index}>
                     {data.username}
-                    <button onClick={() => console.log('삭제')}>삭제</button>
+                    <button onClick={() => deleteFriend(token, data.friendId).then(fetchFriend())}>삭제</button>
                 </div>
             ))
         }
@@ -153,12 +153,12 @@ const Mailbox = () => {
 
     const searchedFriend = () => {
         if (searchResult.length > 0) {
+            console.log("검색 결과: ", searchResult)
             return searchResult.map(item => (
                     <>
-                        <div key={item.userid}>
+                        <div key={item.id}>
                             {item.username}
-                            <button onClick={() => handleSendRequest(item.userid)}>친구 추가</button>
-                        </div>
+                            <button onClick={() => handleSendRequest(item._id)}>친구 추가</button>                        </div>
                     </>
                 )
             );
@@ -183,14 +183,14 @@ const Mailbox = () => {
     }, [user]);
 
     useEffect(() => {
-        if (user) {
-            setIsLoading(false);
+        // if (user) {
+        //     setIsLoading(false);
 
             fetchFriend(currentPage)
-        } else {
-            setIsLoading(true);
-        }
-    }, [friends]);
+        // } else {
+        //     setIsLoading(true);
+        // }
+    }, [friends, currentPage]);
 
     return (
         <>

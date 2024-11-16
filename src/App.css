@@ -36,6 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
 /* modal css ----------------------------------------------------------------*/
 .modal-overlay {
   position: fixed;
@@ -117,9 +130,15 @@ header ul li button:hover {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  overflow: hidden;
+  transition: background-position 2s ease;
+
 }
 .movement-space {
-  position: relative;
+  /* position: relative; */
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -151,6 +170,8 @@ header ul li button:hover {
   z-index: 20;
   width: 100px;
   height: 100px;
+  pointer-events: none;
+  animation: clickEffect 1s ease-out forwards;
   /* background-color: blue; */
   background-image: url('./assets/Click-img.png');
   background-size: contain;
@@ -164,7 +185,7 @@ header ul li button:hover {
   position: absolute;
   width: 200px;
   height: 500px;
-  /* background-color: red; */
+  background-color: red;
   transition: transform 1s ease-out;
   z-index: 5;
   pointer-events: none;
@@ -280,5 +301,29 @@ header ul li button:hover {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+.library-container {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 80px 80px 80px 420px;
+  width: 100%;
+}
+.bookcase {
+  width: 100%;
+  height: 480px;
+  overflow-y: auto;
+}
+.book {
+  width: 100%;
+  background-color: rgba(256, 256, 256, 0.5);
+  margin-top: 10px;
+  height: 80px;
+  border-radius: 8px;
+}
+.title-library {
+  font-size:34px;
+  font-weight:500; 
+  
 }
 /*Library End----------------------------------------------------------------*/

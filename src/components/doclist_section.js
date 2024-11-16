@@ -23,18 +23,17 @@ const Doclist_section = ({key, data, onDelete}) => {
     // }
 
     return (
-        <div class="shelf">
-                    <div class="book">
-                        <div class="cover">
-                            {/* <img src="book_cover.jpg" alt="book cover" /> */}
-                        </div>
-                        <div class="title">{data.title}</div>
-                        <div class="actions">
-                            <button onClick={()=>handleClick(data.docid)}>수정</button>
-                            <button onClick={()=>onDelete()}>삭제</button>
-                        </div>
-                    </div>
-                </div>
+        <div class="book">
+            <div class="cover">
+                {/* <img src="book_cover.jpg" alt="book cover" /> */}
+            </div>
+            <div class="title-library">{data.title}</div>
+            <div class="date">{data.updatedAt}</div>
+            <div class="actions">
+                <button onClick={()=>handleClick(data.docid)}>수정</button>
+                <button onClick={()=>onDelete()}>삭제</button>
+            </div>
+        </div>
     )
 }
 export default Doclist_section;

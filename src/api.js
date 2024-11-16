@@ -109,6 +109,13 @@ export const acceptFriendRequest = async (token, requestId) => {
     return response.data;
 }
 
+export const rejectFriendRequest = async (token, requestId) => {
+    const response = await api.put(`/friends/reject?requestId=${requestId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
 export const searchFriend = async (token, query) => {
     // console.log('searching', query);
     const encodeQuery = encodeURIComponent(query);
@@ -120,6 +127,14 @@ export const searchFriend = async (token, query) => {
 
 export const getFriendsData = async (token, batch) => {
     const response = await api.post(`/friends/getFriendsData`,  batch , {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const deleteFriend = async (token, friendId) => {
+    console.log('delete friend', friendId);
+    const response = await api.delete(`/friends/${friendId}`, {
         headers: { Authorization: `Bearer ${token}`}
     });
     return response.data;
