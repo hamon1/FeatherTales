@@ -4,7 +4,7 @@ import { UserProvider } from './contexts/UserContext';
 import { UserContext } from './contexts/UserContext';
 import { DocsContext } from './contexts/DocContext';
 import { DocsProvider } from './contexts/DocContext';
-
+import { RoomContext, RoomProvider } from './contexts/RoomContext';
 import { api } from './api';
 
 import logo from './logo.svg';
@@ -19,21 +19,25 @@ import Profile from './pages/Profile';
 import Library from './pages/Library';
 import Docview from './pages/Docview';
 import Mailbox from './pages/Mailbox';
+import Calendar from './pages/Calendar';
 
 import { Header } from './Header';
 
 function App() {
   return (
     <UserProvider>
-      <DocsProvider>
-        <AppContent />
-      </DocsProvider>
+      <RoomProvider> 
+        <DocsProvider>
+          <AppContent />
+        </DocsProvider>
+      </RoomProvider>
     </UserProvider>
   );
 }
 
 function AppContent() {
   const { setUser } = useContext(UserContext); 
+  const { setRoom } = useContext(RoomContext);
 
 
   useEffect(() => {
@@ -49,6 +53,13 @@ function AppContent() {
         console.error("failed to fetch user data", error.response?.data?.msg);
         sessionStorage.removeItem('token');
       });
+
+      api.get('/room/getRoomData', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        setRoom(response.data);
+      })
     }
   }, []);
 
@@ -71,6 +82,7 @@ function AppContent() {
           {/* <Route path="/docview" element={<Docview />} /> */}
           <Route path="/docview/:docId" element={<Docview />} />
           <Route path="/mailbox" element={<Mailbox />} />
+          <Route path="/calendar" element={<Calendar />} />
         </Routes>
       </div>
     </Router>

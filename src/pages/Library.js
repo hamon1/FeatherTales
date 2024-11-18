@@ -25,7 +25,7 @@ const Library = () => {
     useEffect(() => {
         if (user) {
             setIsLoading(false);
-            console.log(user.userid);
+            // console.log(user);
         } else {
             setIsLoading(true);
         }
@@ -35,14 +35,14 @@ const Library = () => {
         const fetchDocs = async() => {
             try{
                 const data = await getDocs(token, user.userid);
-                console.log(data.documents.length);
+                console.log('doc length: ', data.documents.length);
                 setDocs(data.documents);
             } catch (error) {
                 console.error('Failed to fetch documents', error.response.data.msg);
             }
         };
 
-        if (user && user.userid) {
+        if (user) {
             fetchDocs();
         }
     }, [user], [docs]);

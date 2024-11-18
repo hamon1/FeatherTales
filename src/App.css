@@ -49,6 +49,11 @@
     opacity: 0;
   }
 }
+
+html, body {
+  overflow: hidden;
+}
+
 /* modal css ----------------------------------------------------------------*/
 .modal-overlay {
   position: fixed;
@@ -124,27 +129,30 @@ header ul li button:hover {
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;
+  /* display: flex; */
   /* background-color: #61dafb; */
   background-image: url('./assets/Feather-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
+  overflow: visible;
   transition: background-position 2s ease;
-
 }
 .movement-space {
-  /* position: relative; */
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100vw;
+  position: relative;
+  /* position: absolute; */
+  /* left: 0; */
+  /* top: 0; */
+  /* width: 100%; */
+  /* width: calc(100vh * (16/9)); */
+  width: calc(100vw * (1920 / 1080));
+
   height: 100vh;
   overflow: hidden;
   cursor: pointer;
   z-index: 5;
   /* background-color: aquamarine; */
+  transition: transform 2s ease,
 }
 .avatar-box {
   width: 100%;
@@ -180,21 +188,27 @@ header ul li button:hover {
 }
 .object {
   position: absolute;
+  z-index: 100;
 }
 .object-door {
   position: absolute;
   width: 200px;
   height: 500px;
-  background-color: red;
+  /* background-color: red; */
   transition: transform 1s ease-out;
   z-index: 5;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 .object-button {
-  z-index: 10;
+  z-index: 100;
+  /* visibility: visible; */
+  /* position: fixed; */
   position: absolute;
   pointer-events: auto;
 }
+/* #mainDoor-button #library-button{
+  visibility: hidden;
+} */
 .door {
   position: absolute;
   width: 200px;
@@ -206,13 +220,17 @@ header ul li button:hover {
 }
 .main {
     /* background-color: aqua; */
-    /* top: -120px; */
+    top: 120px;
     left: 620px;
 }
 .library {
   /* background-color: aquamarine; */
-  top: 120px;
+  top: 300px;
   left: 1200px;
+}
+.mailboxButton {
+  top: 280px;
+  left: -300;
 }
 /* Home End---------------------------------------------------------------- */
 /* mailbox.js ----------------------------------------------------------------*/

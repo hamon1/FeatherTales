@@ -75,7 +75,7 @@ export const searchDocs = async (query) => {
 }
 
 export const getDocs = async (token, userid) => {
-    const response = await api.get(`/documents/getDocument?userid=${userid}`, {
+    const response = await api.get(`/documents/getDocument`, {
         headers: { Authorization: `Bearer ${token}`}
     });
     return response.data;
@@ -135,6 +135,14 @@ export const getFriendsData = async (token, batch) => {
 export const deleteFriend = async (token, friendId) => {
     console.log('delete friend', friendId);
     const response = await api.delete(`/friends/${friendId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const getRoomData = async (token) => {
+    console.log('getRoomData');
+    const response = await api.get(`/room/getRoomData`, {
         headers: { Authorization: `Bearer ${token}`}
     });
     return response.data;
