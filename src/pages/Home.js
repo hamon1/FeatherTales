@@ -21,6 +21,7 @@ const Home = () => {
     const { room, setRoom } = useContext(RoomContext);
 
     const avatarRef = useRef(null);
+    const petRef = useRef(null);
     const clickRef = useRef(null);
 
     const centerX = window.innerWidth / 2;
@@ -29,7 +30,7 @@ const Home = () => {
     const [position, setPosition] = useState({ x: centerX, y: centerY });
     const [clickPosition, setClickPosition] = useState({ x: -1000, y:  -1000});
     const [showClickComponent, setShowClickComponent] = useState(true);
-    
+
     const objectMainDoorRef = useRef(null);
     const [positionMainDoor, setPositionMainDoor] = useState({ x: 50, y: 50 });
     const [ShowMainDoorButton, setShowMainDoorButton] = useState(false);
@@ -180,6 +181,10 @@ const Home = () => {
     const handleAvatarClick = () => {
         alert('Avatar clicked');
     }
+    const handlePetClick = (event) => {
+        event.stopPropagation();
+        alert('안녕!');
+    }
     
     const handleOverlap = (target) => {
         console.log('오브젝트 겹침', target);
@@ -291,6 +296,16 @@ const Home = () => {
                 setIsLoading(true);
             }
         }, [user, room])
+
+        useEffect(() => {
+            if (avatarRef.current) {
+                const avatarRect = avatarRef.current.getBoundingClientRect();
+                if (petRef.current) {
+                    // petRef.current.style.left = `${avatarRect.left + 20}px`;
+                    // petRef.current.style.top = `${avatarRect.top + 20}px`;
+                }
+            }
+        }, [position])
         
         useEffect(() => {
             //최적화?
@@ -367,7 +382,7 @@ const Home = () => {
                             {objects()}
                         <div class="avatar-box">
                             <div 
-                                className="avatar"
+                                class="avatar"
                                 ref={avatarRef}
                                 style={{
                                     transform: `translate(${position.x}px, ${position.y}px)`,
@@ -377,9 +392,19 @@ const Home = () => {
                                 {/* <p>avartar</p> */}
                                 <p>{user.username}</p>
                             </div>
+                            <div
+                                ref={petRef}
+                                class="pet-element"
+                                style={{
+                                    transform: `translate(${position.x + 180}px, ${position.y + 200}px)`,
+                                }}
+                                onClick={handlePetClick}
+                            >
+                                {/* <img src="../assets/Pet.png"/> */}
+                            </div>
                             {showClickComponent && (
                                 <div 
-                                className="click-component"
+                                class="click-component"
                                 ref={clickRef}
                                 // style={{
                                 //     transform: `translate(${clickPosition.x}px, ${clickPosition.y}px)`,
@@ -391,6 +416,7 @@ const Home = () => {
                                 >
                                     
                                 </div>
+                                
                             )} 
                         </div>
                     </div>

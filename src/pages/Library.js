@@ -98,11 +98,11 @@ const Library = () => {
         ):
         <div class="library-background">
             <div class="library-container">
-                <h1>Library Page</h1>
-                <div>
-                    <button onClick={()=> handleCreateDoc()}>+</button>
-                </div>
-                <div>
+                {/* <h1>t</h1> */}
+                {/* <div> */}
+                <div class="add_button">
+                    <button class="doc-add-button" onClick={()=> handleCreateDoc()}>+</button>
+                {/* </div> */}
                 {/* <div class="avatar library">
                         <p>avatar</p>
                     </div> */}

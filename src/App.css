@@ -53,6 +53,10 @@
 html, body {
   overflow: hidden;
 }
+.button {
+  /* width: 10px; */
+  /* height: 50px; */
+}
 
 /* modal css ----------------------------------------------------------------*/
 .modal-overlay {
@@ -81,7 +85,7 @@ header {
   right: 0;
   height: 100%;
   width: 40px; /* 원하는 너비로 조정 */
-  background-color: blanchedalmond;
+  background-color: rgb(88, 85, 80);
   padding: 20px 0; /* 세로 중앙 정렬 */
   display: flex;
   align-items: center;
@@ -110,18 +114,58 @@ header ul li {
 }
 header ul li a,
 header ul li button {
-  color:cadetblue;
-  text-decoration: none;
+  /* color:cadetblue; */
+  /* font-size: 10px; */
+  /* text-decoration: none; */
   background: none;
-  padding: 8px 16px;
+  /* background-color: #333; */
+  /* width: 32px;
+  height: 32px;
+  padding: 8px 16px; */
   border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease-out;
+  z-index: 100;
+  /* cursor: pointer; */
+  /* transition: background-color 0.3s ease-out; */
 }
 header ul li a:hover,
 header ul li button:hover {
   background-color: #333;
   border-radius: 5px;
+}
+li:hover::after {
+  content: attr(data-hover); /* li 요소의 데이터 속성 값 사용 */
+  position: absolute;
+  /* top: 100%; 이미지 아래에 텍스트 배치 */
+  /* left: 50%; */
+  height: 32px;
+  width: 100px;
+  transform: translateX(-50%);
+  background-color: rgb(49, 47, 47);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: 1;
+  text-align: left;
+  align-items: center;
+  visibility: visible;
+  transition: opacity 0.2s ease-in-out;
+}
+img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+}
+.profile {
+  /* width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover; */
 }
 /*Header End----------------------------------------------------------------*/
 /* Home.js-------------------------------- */
@@ -146,8 +190,10 @@ header ul li button:hover {
   /* width: 100%; */
   /* width: calc(100vh * (16/9)); */
   width: calc(100vw * (1920 / 1080));
-
   height: 100vh;
+  /* top: 40vh; */
+  /* height: 60vh; */
+
   overflow: hidden;
   cursor: pointer;
   z-index: 5;
@@ -172,6 +218,18 @@ header ul li button:hover {
   transition: transform 1s ease-out;
   transform: translate(50px, 50px);
   z-index: 5;
+}
+.pet-element {
+  position: absolute;
+  background-image: url('./assets/Pet.png');
+  background-size: cover;
+  /* background-color: red;  */
+  width: 100px;
+  height: 100px;
+  /* border-radius: 50%; */
+  pointer-events: none; 
+  transition: transform 2s ease-out;
+  z-index: 100;
 }
 .click-component {
   position: absolute;
@@ -201,10 +259,19 @@ header ul li button:hover {
 }
 .object-button {
   z-index: 100;
+  width: 100px;
+  height: 100px;
+  background: none;
+  border: none;
+  border-radius: 50px;
   /* visibility: visible; */
   /* position: fixed; */
   position: absolute;
   pointer-events: auto;
+}
+.object-button:hover {
+  /* background-color: rgba(255, 0, 0, 0.5); */
+  background-color: rgba(256, 256, 256, 0.5);
 }
 /* #mainDoor-button #library-button{
   visibility: hidden;
@@ -230,7 +297,8 @@ header ul li button:hover {
 }
 .mailboxButton {
   top: 280px;
-  left: -300;
+
+  /* left: -300; */
 }
 /* Home End---------------------------------------------------------------- */
 /* mailbox.js ----------------------------------------------------------------*/
@@ -343,5 +411,13 @@ header ul li button:hover {
   font-size:34px;
   font-weight:500; 
   
+}
+.add_button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.doc-add-button {
+  /* justify-content: flex-end; */
 }
 /*Library End----------------------------------------------------------------*/

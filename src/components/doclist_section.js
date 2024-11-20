@@ -30,8 +30,8 @@ const Doclist_section = ({key, data, onDelete}) => {
             <div class="title-library">{data.title}</div>
             <div class="date">{data.updatedAt}</div>
             <div class="actions">
-                <button onClick={()=>handleClick(data.docid)}>수정</button>
-                <button onClick={()=>onDelete()}>삭제</button>
+                <button class="button" onClick={()=>handleClick(data.docid)}>수정</button>
+                <button class="button" onClick={()=>onDelete()}>삭제</button>
             </div>
         </div>
     )
