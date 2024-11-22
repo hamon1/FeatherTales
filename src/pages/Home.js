@@ -73,12 +73,13 @@ const Home = () => {
                         ref={objectRef}
                         onClick={handleClickObject}
                     >
-                        <p>{name}</p>
+                        {/* <p>{name}</p> */}
                         <button
+                            class="object-button "
                             onClick = {() => console.log("달력 클릭")}
                         >
-                            button
-                            </button>
+                            {name}
+                        </button>
                         {/* <img src={`/images/${type}.png`} alt={type} /> */}
                     </div>
                 );
@@ -279,7 +280,6 @@ const Home = () => {
             };
         }, []);
 
-
         useEffect(() => {
             if (clickPosition.x !== -1000 && clickPosition.y !== -1000) {
                 console.log("Updated click position:", clickPosition);
@@ -287,7 +287,6 @@ const Home = () => {
 
         }, [clickPosition]);
         
-
         useEffect(() => {
             if (user && room) {
                 setIsLoading(false);
@@ -360,7 +359,7 @@ const Home = () => {
                                             id = "mainDoor-button"
                                             onClick={handleMailboxClick}
                                         >
-                                            우체통
+                                            우체통 
                                         </button>
                                     </>
                                 ) :

@@ -147,3 +147,11 @@ export const getRoomData = async (token) => {
     });
     return response.data;
 }
+
+export const addDiaryEntry = async (token, daryData) => {
+    console.log('addDiaryEntry', daryData);
+    const response = await api.post(`/calendar/addDiaryEntry`, daryData, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}

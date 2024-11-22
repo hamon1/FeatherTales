@@ -11,26 +11,47 @@ const Register = () => {
     const [username, setUsername] = useState(''); // 사용자 이름
     const [email, setEmail] = useState(''); // 이메일 주소
     const [password, setPassword] = useState(''); // 비밀번호
+    const [confirmPassword, setConfirmPassword] = useState(''); // 비밀번호 확인
 
-    const { goToCustomize } = useNavigation();
+    const [acceptPassword, setAcceptPassword] = useState(false); // 비밀번호, 비밀번호 확인 값이 같은가? 에 대한 상태
+
+    const { goToLogin } = useNavigation();
     // const navigate = useNavigate();
+
+    const checkPassword = () => {
+
+        if (password === confirmPassword) {
+            alert('확인되었습니다.')
+            setAcceptPassword(true);
+        } else {
+            alert('비번번호가 일치하지 않습니다.')
+            setAcceptPassword(false);
+        }
+    }
     
     // 회원가입 버튼을 눌렀을 때 실행되는 함수
     const handleRegister = async (e) => {
         e.preventDefault(); // 폼의 기본 동작인 새로고침을 방지
+        console.log(password);
+        console.log(confirmPassword);
+
+        if (!(password === confirmPassword)) {
+            alert('비밀번호 입력을 다시 확인해주세요!');
+            return;
+        }
+
         try {
             // 서버로 회원가입 요청을 보냄
             // await api.post('/register', { email, password });
             await registerUser({email, password});
 
-            alert('Registration');
+            alert('회원가입 성공!');
             // const response = await api.post('/login', { email, password });
             const response = await loginUser({email, password});
 
             console.log(response); // 서버 응답을 콘솔에 출력
             // alert(response.data.message); // 서버의 메시지를 사용자에게 알림
-            // navigate('/customize');
-            goToCustomize();
+            goToLogin();
         } catch (error) {
             // 오류가 발생했을 때의 처리
             if (error.response) {
@@ -64,9 +85,10 @@ const Register = () => {
             <input 
                 type="password" 
                 placeholder="Password-again" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+                value={confirmPassword} 
+                onChange={(e) => setConfirmPassword(e.target.value)} 
             />
+            {/* <button type="button" onClikc={() => checkPassword()}>비밀번호 확인</button> */}
             {/* 회원가입 버튼 */}
             <button type="submit">Register</button>  
         </form>
