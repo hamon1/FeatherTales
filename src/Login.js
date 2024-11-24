@@ -6,11 +6,16 @@ import {RoomContext} from './contexts/RoomContext';
 
 import { UseFetchUserData } from './hooks/useFetchUserData';
 
+import { useUserQuery } from './hooks/useUserQuery';
+import { useQueryClient } from '@tanstack/react-query';
+
 const Login = () => {
     const { setUser } = useContext(UserContext);
     const { setRoom } = useContext(RoomContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const queryClient = useQueryClient();
 
     // const { userData, loading } = useFetchUserData(token);
 
@@ -24,16 +29,29 @@ const Login = () => {
             // const response = await api.post('/login', { email, password });
             const response = await loginUser({ email, password }); // 로그인 API 호출
 
+            const token = response.token;
+            sessionStorage.setItem('token', token); // 로그인 성공 시 token 저장
+
+            await queryClient.prefetchQuery({
+                queryKey: ['user'],
+                queryFn: async() => {
+                    const data = await getUserData(token);
+                    console.log("queryClient", data);
+                    return data;
+                },
+            });
+
+            // await queryClient.prefetchQuery(['room', token], () => getRookData(token));
             // alert(response.token);
             // console.log(response);
             // alert(response.data);
             // const userData = UseFetchUserData(response.token);
-            const userData = await getUserData(response.token);
+            // const userData = await getUserData(token);
 
-            const roomData = await getRoomData(response.token);
+            const roomData = await getRoomData(token);
             console.log('roomData successfully');
 
-            setUser(userData);
+            // setUser(userData);
             console.log(roomData);
             setRoom(roomData);
 

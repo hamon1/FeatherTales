@@ -48,6 +48,28 @@ export const getUserData = async (token) => {
     }
 };
 
+export const updateUserData = async (token, updatedUser) => {
+    const response = await api.put('/auth/update-avatar', updatedUser, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const getCategories = async (token) => {
+    const response = await api.get(`/auth/getCategories`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
+export const addCategory = async (token, category) => {
+    console.log(`Adding category`, category);
+    const response = await api.put(`/auth/addCategory`, {category}, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
 export const createDoc = async (token, docData) => {
     console.log(token, docData);
     const response = await api.post('/documents/newdoc', docData, {

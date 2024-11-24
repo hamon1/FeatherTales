@@ -3,6 +3,8 @@ import { UserContext } from '../contexts/UserContext';
 import { RoomContext } from '../contexts/RoomContext';
 import '../App.css';
 
+import { useUserQuery } from '../hooks/useUserQuery';
+
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '../utils/navigate';
 
@@ -11,13 +13,17 @@ import Mailbox from './Mailbox';
 // import { header } from '../Header';
 
 const Home = () => { 
-    const [isLoading, setIsLoading] = useState(true);
+    const token = sessionStorage.getItem('token');
+
+    const { data: user, isLoading, error} = useUserQuery(token);
+
+    // const [isLoading, setIsLoading] = useState(true);
     const { goToCustomize } = useNavigation();
     const { goToLibrary } = useNavigation();
     const { goToMailbox } = useNavigation();
 
     const navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+    // const { user, setUser } = useContext(UserContext);
     const { room, setRoom } = useContext(RoomContext);
 
     const avatarRef = useRef(null);
@@ -289,10 +295,10 @@ const Home = () => {
         
         useEffect(() => {
             if (user && room) {
-                setIsLoading(false);
+                // setIsLoading(false);
                 console.log('roomdata: ', room);
             } else {
-                setIsLoading(true);
+                // setIsLoading(true);
             }
         }, [user, room])
 

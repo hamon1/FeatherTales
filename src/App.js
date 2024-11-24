@@ -5,6 +5,9 @@ import { UserContext } from './contexts/UserContext';
 import { DocsContext } from './contexts/DocContext';
 import { DocsProvider } from './contexts/DocContext';
 import { RoomContext, RoomProvider } from './contexts/RoomContext';
+
+import { useUserQuery } from './hooks/useUserQuery'; 
+
 import { api } from './api';
 
 import logo from './logo.svg';
@@ -24,6 +27,11 @@ import Calendar from './pages/Calendar';
 import { Header } from './Header';
 
 function App() {
+  const { data: user, isLoading, error } = useUserQuery();
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error loading user data</p>;
+
   return (
     <UserProvider>
       <RoomProvider> 

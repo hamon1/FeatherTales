@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs } from '../api';
+import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs, addCategory, getCategories } from '../api';
 import { useNavigation } from '../utils/navigate';
 import { UserContext } from '../contexts/UserContext';
 import { DocsContext } from '../contexts/DocContext';
@@ -14,6 +14,10 @@ const Library = () => {
 
     const { user, setUser } = useContext(UserContext);
     const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
+
+    const [categories, setCategories] = useState([]);
+
+    const [newCategory, setNewCategory] = useState('');
 
     const { goToDocview } = useNavigation();
     // const [docs, setDocs] = useState([
@@ -47,6 +51,20 @@ const Library = () => {
         }
     }, [user], [docs]);
     
+    useEffect(() => {
+        const fetchCategories = async() => {
+            try{
+                const data = await getCategories(token, user.userid);
+                console.log('categories: ', data);
+                setCategories(data);
+            } catch (error) {
+                console.error('Failed to fetch categories', error.response.data.msg);
+            }
+        };
+
+        fetchCategories();
+    }, [user])
+
     const handleCreateDoc = async (docData) => {
         // getDocs(token, user.userid);
 
@@ -90,6 +108,15 @@ const Library = () => {
         ))
     }
 
+    const categoriesList = (categories) => {
+        if (categories.length === 0) {
+            return <p>No categories yet</p>;
+        }
+        return categories.map((category, index) => (
+            <div key={index}>{category}</div>
+        ))
+    }
+
 
     return (
         <>
@@ -111,6 +138,14 @@ const Library = () => {
                     {docListComponent(docs)}
                 </div>
             </div>
+                <div class="tags-container">
+                    <div class="add-category">
+                        <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
+                        <button onClick={() => addCategory(token, newCategory)}>카테고리 추가</button>
+                    </div>
+                    {/* <button>전체</button> */}
+                    {categoriesList(categories)}
+                </div>
         </div>
     }
     </>

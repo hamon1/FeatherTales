@@ -92,6 +92,7 @@ const Docview = () => {
                         placeholder="제목을 입력하세요!"
                     >
                     </input>
+                    <div>tag</div>
                 </div>
                 <div class="content">
                     {/* <input 
