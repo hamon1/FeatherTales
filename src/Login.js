@@ -32,6 +32,7 @@ const Login = () => {
             const token = response.token;
             sessionStorage.setItem('token', token); // 로그인 성공 시 token 저장
 
+            console.log('login', token);
             await queryClient.prefetchQuery({
                 queryKey: ['user'],
                 queryFn: async() => {

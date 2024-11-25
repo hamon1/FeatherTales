@@ -14,6 +14,7 @@ import Mailbox from './Mailbox';
 
 const Home = () => { 
     const token = sessionStorage.getItem('token');
+    console.log('home token', token);
 
     const { data: user, isLoading, error} = useUserQuery(token);
 

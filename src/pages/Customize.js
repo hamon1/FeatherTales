@@ -5,10 +5,17 @@ import { useFetchUserData } from '../hooks/useFetchUserData';
 
 import { useNavigation } from '../utils/navigate';
 
+import { useUserQuery, useUserUpdateMutation } from '../hooks/useUserQuery';
+
 const Customize = () => { 
+    const token = sessionStorage.getItem('token');
+    const { data: user, isLoading } = useUserQuery(token);
+    console.log('customize.js user data: ' + user);
+    console.log('costom token: ' , token);
+    const { mutate } = useUserUpdateMutation();
     const { goToHome } = useNavigation();
 
-    const { user, setUser } = useContext(UserContext);
+    // const { user, setUser } = useContext(UserContext);
     // const { userData, loading } = useFetchUserData(user.token);
     const [nickname, setNickname] = useState(user?.username || '');
     const [skinColor, setSkinColor] = useState(user?.avatar.skincolor)
@@ -31,7 +38,6 @@ const Customize = () => {
     }
 
     const handleSave = async () => {
-        const token = sessionStorage.getItem('token');
         // console.log(token);
 
         if (!token) {
@@ -58,12 +64,22 @@ const Customize = () => {
                 eyeColor: eyeColor,
                 hairStyle: hairStyle,
             };
-            await api.put('/auth/update-avatar', updatedAvatar)
+            // await api.put('/auth/update-avatar', updatedAvatar)
 
-            setUser((prev) => ({ ...prev, ...updatedAvatar}))
-            alert('변경되었습니다.');
+            // setUser((prev) => ({ ...prev, ...updatedAvatar}))
+            // alert('변경되었습니다.');
+            mutate(updatedAvatar, {
+                onSuccess: () => {
+                    // setUser((prev) => ({ ...prev, ...updatedAvatar }));
+                    alert('변경되었습니다.');
+                },
+                onError: (error) => {
+                    console.error("Failed to save avatar", error
+                );
+                }
+            })
         } catch (error) {
-            console.error("Failed to save avatar", error.response.data.msg);
+            console.error("Failed to save avatar", error);
         }
     }
 

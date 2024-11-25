@@ -37,6 +37,7 @@ export const logoutUser = () => {
 }
 
 export const getUserData = async (token) => {
+    console.log('getUserData', token);
     try {
     const response = await api.get(`/auth/user`, {
         headers: { Authorization: `Bearer ${token}`}
