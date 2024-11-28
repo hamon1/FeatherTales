@@ -1,6 +1,6 @@
 import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs } from '../api';
 
-export const handleDeleteDoc = async (token, docId, setDocs) => {
+export const handleDeleteDoc = async (token, docId) => {
     console.log('handleDeleteDoc', docId);
         try {
             console.log('boob');
@@ -12,7 +12,7 @@ export const handleDeleteDoc = async (token, docId, setDocs) => {
             //     console.log('doc updated!');
             //     return updateDocs;
             // })
-            setDocs((prevDocs) => prevDocs.filter((doc) => doc.docid !== docId));
+            // setDocs((prevDocs) => prevDocs.filter((doc) => doc.docid !== docId));
 
         } catch (error) {
             console.error('Failed to delete document', error.response.data.msg);

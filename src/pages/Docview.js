@@ -3,6 +3,12 @@ import { api, createDoc, updateDoc, getDocsbyDocId } from '../api';
 import { UserContext } from '../contexts/UserContext';
 // import { UserService } from '../services/UserService';
 
+
+import { useUserQuery } from '../hooks/useUserQuery';
+
+import { useDocumentQuery } from "../hooks/useDocumentQuery";
+
+
 import { useNavigation } from '../utils/navigate';
 import { useParams } from 'react-router-dom';
 
@@ -14,18 +20,45 @@ const Docview = () => {
     const {docId} = useParams();
     const { goToHome, goToLibrary } = useNavigation();
     
-    const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
-    const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
+    const { data: user, isLoading, error} = useUserQuery();
+
+    const { data: docs } = useDocumentQuery();
+    // const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
+    // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
+
+    const [categories, setCategories] = useState([]);
 
     const [docData, setDocData] = useState('');
     const [title, setTitle] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [content, setContent] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
     const token = sessionStorage.getItem('token');
 
     console.log(token);
+
+    useEffect(() => {
+        if(user) {
+            setCategories(user.categories);
+        }
+    }, [user]);
+
+    const categoriesList = () => {
+        console.log(categories.length);
+        console.log('categories: ', categories);
+        if (categories) {
+            return categories.map((categoryItem, index) => (
+                <>
+                    <div key={`div-${index}`}>{categoryItem}?</div>
+                    <option key={`option-${index}`} value={categoryItem}>{categoryItem}</option>
+                </>
+            ));
+        } else {
+            return <option value="">카테고리를 선택하세요.</option>;
+        }
+    }
 
     useEffect(() => {
         if(docId) {
@@ -61,6 +94,7 @@ const Docview = () => {
         const data = {
             userid: user.userid,
             title: title,
+            category: selectedCategory,
             content: content,
         };
         try {
@@ -77,6 +111,11 @@ const Docview = () => {
 
     }
 
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(e.target.value); // 선택된 값 업데이트
+        console.log('선택된 카테고리:', e.target.value);
+    };
+
     return (
         <div class="docView-background">
             {/* <h1>Documentation Page</h1> */}
@@ -92,7 +131,15 @@ const Docview = () => {
                         placeholder="제목을 입력하세요!"
                     >
                     </input>
-                    <div>tag</div>
+                    <div>category: </div>
+                    <select 
+                        id="category" 
+                        value={selectedCategory} // 현재 선택된 값
+                        onChange={handleCategoryChange}
+                    >
+                        {categoriesList()}
+
+                    </select>
                 </div>
                 <div class="content">
                     {/* <input 
@@ -113,7 +160,7 @@ const Docview = () => {
                     </div>
                 <div class="actions">
                     <button onClick={() => handleDocData().then(console.log('저장 완료!'))}>저장</button>
-                    <button onClick={() => handleDeleteDoc(token, docId, setDocs).then(goToLibrary())}>삭제</button>
+                    <button onClick={() => handleDeleteDoc(token, docId).then(goToLibrary())}>삭제</button>
                     <button onClick={() => goToLibrary()}>뒤로가기</button>
                 </div>
             </div>
