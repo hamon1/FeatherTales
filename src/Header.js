@@ -43,6 +43,13 @@ export const Header = () => {
                                     src={customizeImage}
                                     />
                                 </Link></li>
+                            <li data-hover="책방"><Link to="/library">
+                                <img 
+                                class="library" 
+                                src={profileImage}
+                                alt="Profile"
+                                />
+                                </Link></li>
                             <li data-hover="프로필"><Link to="/profile">
                                 <img 
                                 class="profile" 
