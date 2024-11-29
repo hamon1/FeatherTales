@@ -42,6 +42,7 @@ const Docview = () => {
     useEffect(() => {
         if(user) {
             setCategories(user.categories);
+            setSelectedCategory(user.categories[0]?.type || '');
         }
     }, [user]);
 
@@ -51,8 +52,8 @@ const Docview = () => {
         if (categories) {
             return categories.map((categoryItem, index) => (
                 <>
-                    <div key={`div-${index}`}>{categoryItem}?</div>
-                    <option key={`option-${index}`} value={categoryItem}>{categoryItem}</option>
+                    {/* <div key={`div-${index}`}>{categoryItem.type}?</div> */}
+                    <option key={`option-${index}`} value={categoryItem.type}>{categoryItem.type}</option>
                 </>
             ));
         } else {
@@ -91,6 +92,7 @@ const Docview = () => {
     
     const handleDocData = async () => {
         console.log(isEditing);
+        console.log(selectedCategory);
         const data = {
             userid: user.userid,
             title: title,

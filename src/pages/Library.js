@@ -4,16 +4,24 @@ import { useNavigation } from '../utils/navigate';
 import { UserContext } from '../contexts/UserContext';
 import { DocsContext } from '../contexts/DocContext';
 
+import { useUserQuery } from '../hooks/useUserQuery';
+
+import { useDocumentQuery } from "../hooks/useDocumentQuery";
+
 import Doclist_section from '../components/doclist_section';
 import LoadingPage from './LoadingPage';
 
 import { handleDeleteDoc } from '.././utils/docUtils';
 
 const Library = () => {
-    const [isLoading, setIsLoading] = useState(true);
+    const { data: user, isLoading, error} = useUserQuery();
 
-    const { user, setUser } = useContext(UserContext);
-    const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
+    const { data: docs } = useDocumentQuery();
+    console.log(docs);
+    // const [isLoading, setIsLoading] = useState(true);
+
+    // const { user, setUser } = useContext(UserContext);
+    // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
 
     const [categories, setCategories] = useState([]);
 
@@ -26,30 +34,30 @@ const Library = () => {
     
     const token = sessionStorage.getItem('token');
 
-    useEffect(() => {
-        if (user) {
-            setIsLoading(false);
-            // console.log(user);
-        } else {
-            setIsLoading(true);
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (user) {
+    //         setIsLoading(false);
+    //         // console.log(user);
+    //     } else {
+    //         setIsLoading(true);
+    //     }
+    // }, [user]);
 
-    useEffect(() => {
-        const fetchDocs = async() => {
-            try{
-                const data = await getDocs(token, user.userid);
-                console.log('doc length: ', data.documents.length);
-                setDocs(data.documents);
-            } catch (error) {
-                console.error('Failed to fetch documents', error.response.data.msg);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchDocs = async() => {
+    //         try{
+    //             const data = await getDocs(token, user.userid);
+    //             console.log('doc length: ', data.documents.length);
+    //             // setDocs(data.documents);
+    //         } catch (error) {
+    //             console.error('Failed to fetch documents', error.response.data.msg);
+    //         }
+    //     };
 
-        if (user) {
-            fetchDocs();
-        }
-    }, [user], [docs]);
+    //     if (user) {
+    //         fetchDocs();
+    //     }
+    // }, [user], [docs]);
     
     useEffect(() => {
         const fetchCategories = async() => {
@@ -58,7 +66,7 @@ const Library = () => {
                 console.log('categories: ', data);
                 setCategories(data);
             } catch (error) {
-                console.error('Failed to fetch categories', error.response.data.msg);
+                console.error('Failed to fetch categories', error);
             }
         };
 
@@ -103,7 +111,7 @@ const Library = () => {
             <Doclist_section 
                 key= {doc.docid}
                 data={doc}
-                onDelete={() => handleDeleteDoc(token, doc.docid, setDocs)}
+                onDelete={() => handleDeleteDoc(token, doc.docid)}
             />
         ))
     }
@@ -113,7 +121,7 @@ const Library = () => {
             return <p>No categories yet</p>;
         }
         return categories.map((category, index) => (
-            <div key={index}>{category}</div>
+            <div key={index}>{category.type}</div>
         ))
     }
 
@@ -135,7 +143,7 @@ const Library = () => {
                     </div> */}
                 </div>
                 <div class="bookcase">
-                    {docListComponent(docs)}
+                    {docListComponent(docs.documents)}
                 </div>
             </div>
                 <div class="tags-container">

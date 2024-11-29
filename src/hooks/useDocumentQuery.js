@@ -16,7 +16,7 @@ export const useDocumentQuery = () => {
         queryFn: 
         async () => {
         const  data  = await getDocs(token);
-        console.log('user query', data, token);
+        console.log('doc query', data, token);
         return data;
 }
     })

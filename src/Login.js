@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import { useNavigate } from'react-router-dom';
-import {api, loginUser, getUserData, getRoomData } from './api';
+import {api, loginUser, getUserData, getRoomData, getDocs } from './api';
 import {UserContext} from './contexts/UserContext';
 import {RoomContext} from './contexts/RoomContext';
 
@@ -41,6 +41,14 @@ const Login = () => {
                     return data;
                 },
             });
+            await queryClient.prefetchQuery({
+                queryKey: ['docs'],
+                queryFn: async() => {
+                    const data = await getDocs(token);
+                    console.log("queryClient", data);
+                    return data;
+                }
+            })
 
             // await queryClient.prefetchQuery(['room', token], () => getRookData(token));
             // alert(response.token);
