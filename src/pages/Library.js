@@ -4,7 +4,7 @@ import { useNavigation } from '../utils/navigate';
 import { UserContext } from '../contexts/UserContext';
 import { DocsContext } from '../contexts/DocContext';
 
-import { useUserQuery } from '../hooks/useUserQuery';
+import { useUserQuery, useUserUpdateMutation, useCategoriseUpdateMutation } from '../hooks/useUserQuery';
 
 import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
@@ -18,6 +18,9 @@ const Library = () => {
 
     const { data: docs } = useDocumentQuery();
     console.log(docs);
+
+    const { mutate } = useCategoriseUpdateMutation();
+
     // const [isLoading, setIsLoading] = useState(true);
 
     // const { user, setUser } = useContext(UserContext);
@@ -59,24 +62,41 @@ const Library = () => {
     //     }
     // }, [user], [docs]);
     
-    useEffect(() => {
-        const fetchCategories = async() => {
-            try{
-                const data = await getCategories(token, user.userid);
-                console.log('categories: ', data);
-                setCategories(data);
-            } catch (error) {
-                console.error('Failed to fetch categories', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchCategories = async() => {
+    //         try{
+    //             const data = await getCategories(token, user.userid);
+    //             console.log('categories: ', data);
+    //             setCategories(data);
+    //         } catch (error) {
+    //             console.error('Failed to fetch categories', error);
+    //         }
+    //     };
 
-        fetchCategories();
-    }, [user])
+    //     fetchCategories();
+    // }, [user])
 
     const handleCreateDoc = async (docData) => {
         // getDocs(token, user.userid);
 
         goToDocview();
+    }
+
+    const handleUpdateCategory = async (newCategory) => {
+        try {
+            mutate(newCategory, {
+                onSuccess: () => {
+                    // setUser((prev) => ({ ...prev, ...updatedAvatar }));
+                    alert('생성');
+                },
+                onError: (error) => {
+                    alert(error.response.data.msg);
+                    console.error(error.response.data.msg);
+                }
+            })
+        } catch (error) {
+            console.error("Failed to save category", error);
+        }
     }
 
     // const handleDeleteDoc = async (docId) => {
@@ -117,6 +137,7 @@ const Library = () => {
     }
 
     const categoriesList = (categories) => {
+
         if (categories.length === 0) {
             return <p>No categories yet</p>;
         }
@@ -149,10 +170,10 @@ const Library = () => {
                 <div class="tags-container">
                     <div class="add-category">
                         <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
-                        <button onClick={() => addCategory(token, newCategory)}>카테고리 추가</button>
+                        <button onClick={() => handleUpdateCategory(newCategory)}>카테고리 추가</button>
                     </div>
                     {/* <button>전체</button> */}
-                    {categoriesList(categories)}
+                    {categoriesList(user.categories)}
                 </div>
         </div>
     }
