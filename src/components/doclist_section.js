@@ -63,6 +63,7 @@ const Doclist_section = ({key, data, onDelete}) => {
             <div class="cover">
                 {/* <img src="book_cover.jpg" alt="book cover" /> */}
             </div>
+            <div>{data.category}</div>
             <div class="title-library">{data.title}</div>
             <div class="date">{data.updatedAt}</div>
             <div class="actions">

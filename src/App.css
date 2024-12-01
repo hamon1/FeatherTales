@@ -407,6 +407,7 @@ img {
   position: relative;
 }
 .library-container {
+  z-index: 10;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   right: 0;
@@ -420,7 +421,8 @@ img {
   justify-content: center;
 }
 .bookcase {
-  background-color: aliceblue;
+  z-index: 10;
+  /* background-color: aliceblue; */
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
@@ -432,6 +434,7 @@ img {
   overflow-y: auto;
 }
 .book {
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -507,6 +510,20 @@ img {
   width: 100px;
   background-color: rgb(165, 191, 191);
   color: #fff;
+}
+
+
+
+.categories-tag {
+  z-index: 20;
+  background-color:#81b7c6;
+  width: 50px;
+  height: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  border: 2px solid;
+  border-color: #fff;
+
 }
 /*Library End----------------------------------------------------------------*/
 /* DocView.js ----------------------------------------------------------------*/

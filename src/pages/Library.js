@@ -26,6 +26,7 @@ const Library = () => {
     // const { user, setUser } = useContext(UserContext);
     // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
 
+    const [ isVisibleAddCategory, setIsVisibleAddCategory] = useState(false);
     const [categories, setCategories] = useState([]);
 
     const [newCategory, setNewCategory] = useState('');
@@ -87,6 +88,7 @@ const Library = () => {
             mutate(newCategory, {
                 onSuccess: () => {
                     // setUser((prev) => ({ ...prev, ...updatedAvatar }));
+                    setIsVisibleAddCategory(false);
                     alert('생성');
                 },
                 onError: (error) => {
@@ -142,7 +144,7 @@ const Library = () => {
             return <p>No categories yet</p>;
         }
         return categories.map((category, index) => (
-            <div key={index}>{category.type}</div>
+            <div class="categories-tag" key={index}>{category.type}</div>
         ))
     }
 
@@ -168,10 +170,25 @@ const Library = () => {
                 </div>
             </div>
                 <div class="tags-container">
-                    <div class="add-category">
-                        <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
-                        <button onClick={() => handleUpdateCategory(newCategory)}>카테고리 추가</button>
-                    </div>
+                    <button
+                        onClick={() => setIsVisibleAddCategory(true)}
+                    >
+                        +
+                    </button>
+                    {isVisibleAddCategory ? (
+                        <div class="add-category">
+                            <button
+                                onClick={()=> setIsVisibleAddCategory(false)}
+                            >
+                                -
+                            </button>
+                            <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
+                            <button onClick={() => handleUpdateCategory(newCategory)}>카테고리 추가</button>
+                        </div>
+
+                    ) :
+                        <></>
+                    }
                     {/* <button>전체</button> */}
                     {categoriesList(user.categories)}
                 </div>
