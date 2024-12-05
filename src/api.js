@@ -81,6 +81,7 @@ export const createDoc = async (token, docData) => {
 }
 
 export const updateDoc = async (token, docid, docData) => {
+    console.log(`Updating doc ${docid}`, docData);
     const response = await api.put(`/documents/updateDoc?docid=${docid}`, docData, {
         headers: { Authorization: `Bearer ${token}`}
     });

@@ -9,9 +9,14 @@ import { useUserQuery, useUserUpdateMutation, useCategoriseUpdateMutation } from
 import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
 import Doclist_section from '../components/doclist_section';
+import { CategorySection } from '../components/category_section';
 import LoadingPage from './LoadingPage';
 
 import { handleDeleteDoc } from '.././utils/docUtils';
+
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 
 const Library = () => {
     const { data: user, isLoading, error} = useUserQuery();
@@ -38,45 +43,6 @@ const Library = () => {
     
     const token = sessionStorage.getItem('token');
 
-    // useEffect(() => {
-    //     if (user) {
-    //         setIsLoading(false);
-    //         // console.log(user);
-    //     } else {
-    //         setIsLoading(true);
-    //     }
-    // }, [user]);
-
-    // useEffect(() => {
-    //     const fetchDocs = async() => {
-    //         try{
-    //             const data = await getDocs(token, user.userid);
-    //             console.log('doc length: ', data.documents.length);
-    //             // setDocs(data.documents);
-    //         } catch (error) {
-    //             console.error('Failed to fetch documents', error.response.data.msg);
-    //         }
-    //     };
-
-    //     if (user) {
-    //         fetchDocs();
-    //     }
-    // }, [user], [docs]);
-    
-    // useEffect(() => {
-    //     const fetchCategories = async() => {
-    //         try{
-    //             const data = await getCategories(token, user.userid);
-    //             console.log('categories: ', data);
-    //             setCategories(data);
-    //         } catch (error) {
-    //             console.error('Failed to fetch categories', error);
-    //         }
-    //     };
-
-    //     fetchCategories();
-    // }, [user])
-
     const handleCreateDoc = async (docData) => {
         // getDocs(token, user.userid);
 
@@ -101,51 +67,43 @@ const Library = () => {
         }
     }
 
-    // const handleDeleteDoc = async (docId) => {
-    //     console.log('handleDeleteDoc', docId);
-    //     try {
-    //         console.log('boob');
-    //         const deletedDoc = await deleteDoc(token, docId);
-    //         console.log('Document deleted!', deletedDoc);
-            
-    //         setDocs((prevDocs) => {
-    //             const updateDocs = prevDocs.filter((doc) => doc.docid !== docId);
-    //             console.log('doc updated!');
-    //             return updateDocs;
-    //         })
-    //     } catch (error) {
-    //         console.error('Failed to delete document', error.response.data.msg);
-    //     }
-    // }
-
     function docListComponent(docData) {
         const len = docData.length;
         if (len === 0) {
             return <p>No documents yet</p>;
         }
-        // let docItems = [];
-        // for (let i = 0; i < docData.length; i++) {
-        //     console.log('1' + docData[i].title);
-        //     docItems.push(<Doclist_section data={docData[i]}/>);
-        // }
-        // return docItems;
-        return docData.map(doc => (
-            <Doclist_section 
+
+        
+        return docData.map(doc => {
+            return (<Doclist_section 
                 key= {doc.docid}
                 data={doc}
                 onDelete={() => handleDeleteDoc(token, doc.docid)}
             />
-        ))
+        )})
     }
 
-    const categoriesList = (categories) => {
+    function categoriesList(categories) {
 
         if (categories.length === 0) {
             return <p>No categories yet</p>;
         }
-        return categories.map((category, index) => (
-            <div class="categories-tag" key={index}>{category.type}</div>
-        ))
+        return categories.map((category, index) => {
+            // const [, dropRef] = useDrop({
+            //     accept: 'DOC',
+            //     drop: (draggedItem) => {
+            //         console.log(draggedItem);
+            //     }
+            // })
+            // return (<div class="categories-tag" key={index}>{category.type}</div>)
+            return (
+                <CategorySection 
+                    key= {index}
+                    category={category}
+                    // index={index}
+                />
+            )
+    })
     }
 
 

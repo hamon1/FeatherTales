@@ -6,6 +6,10 @@ import { DocsContext } from './contexts/DocContext';
 import { DocsProvider } from './contexts/DocContext';
 import { RoomContext, RoomProvider } from './contexts/RoomContext';
 
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+
 import { useUserQuery } from './hooks/useUserQuery'; 
 
 import { api } from './api';
@@ -33,13 +37,15 @@ function App() {
   // if (error) return <p>Error loading user data</p>;
 
   return (
-    <UserProvider>
-      <RoomProvider> 
-        <DocsProvider>
-          <AppContent />
-        </DocsProvider>
-      </RoomProvider>
-    </UserProvider>
+    <DndProvider backend={HTML5Backend}>
+      <UserProvider>
+        <RoomProvider> 
+          <DocsProvider>
+            <AppContent />
+          </DocsProvider>
+        </RoomProvider>
+      </UserProvider>
+    </DndProvider>
   );
 }
 

@@ -16,8 +16,8 @@ import { handleDeleteDoc } from '../utils/docUtils';
 import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
-    // console.log(docId);
     const {docId} = useParams();
+    console.log(docId);
     const { goToHome, goToLibrary } = useNavigation();
     
     const { data: user, isLoading, error} = useUserQuery();
@@ -62,6 +62,7 @@ const Docview = () => {
     }
 
     useEffect(() => {
+        console.log("fetching", docId);
         if(docId) {
             setIsEditing(true);
             const fetchDocData = async () => {
@@ -99,6 +100,7 @@ const Docview = () => {
             category: selectedCategory,
             content: content,
         };
+        console.log('update: ', docId);
         try {
             if (isEditing) {
                 await updateDoc(token, docId, data);

@@ -58,10 +58,10 @@ export const useDocUpdateMutation = () => {
     const queryClient = useQueryClient();
     return useMutation({ 
         mutationFn: 
-        async (docid, updateDoc) => {
-            console.log("doc update");
-            const { data } = await updateDoc(token, docid, updateDoc);
-            console.log(data);
+        async ({docid, docData}) => {
+            console.log("doc update!", docid, docData);
+            const { data } = await updateDoc(token, docid, docData);
+            console.log("update?" + data);
             return data;
         },
         onSuccess: () => {

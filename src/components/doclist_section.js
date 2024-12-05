@@ -1,13 +1,42 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import { useNavigation } from '../utils/navigate';
 
 import { api, deleteDoc } from '../api';
 
 import Swal from "sweetalert2";
 
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+
+
 const Doclist_section = ({key, data, onDelete}) => {
+    const [isDraggable, setIsDraggable] = useState(false);
     const { goToDocview } = useNavigation();
 
+    const ref = useRef(null);
+    const timeOutRef = useRef(null);
+
+    const [, dragRef, previewRef] = useDrag({
+        type: 'DOC',
+        item: { data },
+        canDrag: () => isDraggable,
+    })
+
+    
+    const handleMouseDown = () => {
+        console.log('handleMouseDown');
+        timeOutRef.current = setTimeout(() => {
+            setIsDraggable(true);
+            console.log('isDraggable: ', isDraggable);
+        }, 500);
+    }
+    const handleMouseUp = () => {
+        console.log('handleMouseUp');
+        clearTimeout(timeOutRef.current);
+        setIsDraggable(false);
+    }
+    
+    dragRef(ref);
+    previewRef(ref);
     const handleClick = (docId) => {
         console.log('Document ID:', docId);
         goToDocview(docId);
@@ -59,7 +88,13 @@ const Doclist_section = ({key, data, onDelete}) => {
     // }
 
     return (
-        <div class="book">
+        <div 
+            class="book" 
+            ref={ref}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+        >
             <div class="cover">
                 {/* <img src="book_cover.jpg" alt="book cover" /> */}
             </div>
@@ -67,7 +102,7 @@ const Doclist_section = ({key, data, onDelete}) => {
             <div class="title-library">{data.title}</div>
             <div class="date">{data.updatedAt}</div>
             <div class="actions">
-                <button class="update library-btn button" onClick={()=>handleClick(data.docid)}>수정</button>
+                <button class="update library-btn button" onClick={()=>handleClick(data._id)}>수정</button>
                 <button class="delete library-btn button" onClick={handleDelete}>삭제</button>
             </div>
         </div>
