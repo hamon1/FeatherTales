@@ -6,10 +6,11 @@ import { getDocs, createDoc, updateDoc, deleteDoc, searchDocs } from '../api';
 export const useDocumentQuery = () => {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    console.log('useDocumentQuery', token);
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     return useQuery({
         queryKey: ['docs'], 
@@ -25,10 +26,10 @@ export const useDocumentQuery = () => {
 export const useDocCreateMutation = () => {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     const queryClient = useQueryClient();
     return useMutation({
@@ -50,10 +51,10 @@ export const useDocCreateMutation = () => {
 export const useDocUpdateMutation = () => {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     const queryClient = useQueryClient();
     return useMutation({ 

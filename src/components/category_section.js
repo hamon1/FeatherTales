@@ -3,8 +3,12 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 
 import { useDocUpdateMutation } from '../hooks/useDocumentQuery'
 
-export const CategorySection = ({category, index}) => {
+import { deleteCategory } from '../api';
+
+export const CategorySection = ({category, index, editMode}) => {
     const { mutate } = useDocUpdateMutation();
+    const token = sessionStorage.getItem('token');
+
 
     const [, dropRef] = useDrop({
                 accept: 'DOC',
@@ -32,12 +36,18 @@ export const CategorySection = ({category, index}) => {
             })
 
     return (
-    <div 
-        ref={dropRef}
-        class="categories-tag" 
-        key={index}
-        >
-            {category.type}
+        <div class="category-container">
+            <div 
+                ref={dropRef}
+                class="categories-tag" 
+                key={index}
+                >
+                    {category.type}
+            </div>
+            {editMode && <button
+                class="category-edit-btn"
+                onClick={() => deleteCategory(token, category._id)}
+            >-</button>}  {/* editMode is true when drag and drop is enabled */}
         </div>
         )
 }

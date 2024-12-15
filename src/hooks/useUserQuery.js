@@ -6,13 +6,13 @@ import { getUserData, updateUserData, addCategory } from '../api';
 // const token = sessionStorage.getItem('token');
 
 export const useUserQuery = () => { 
-    // console.log('?', token);
     const [token, setToken] = useState(sessionStorage.getItem('token'));
+    console.log('?', token);
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     return useQuery({ 
         queryKey: ['user'], 
@@ -27,10 +27,10 @@ export const useUserQuery = () => {
 export const useUserUpdateMutation = () => {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     const queryClient = useQueryClient();
     return useMutation({ 
@@ -51,10 +51,10 @@ export const useUserUpdateMutation = () => {
 export const useCategoriseUpdateMutation = () => {
     const [token, setToken] = useState(sessionStorage.getItem('token'));
 
-    useEffect(() => {
-        const storedToken = sessionStorage.getItem('token');
-        setToken(storedToken); // 업데이트된 token 설정
-    }, []); // 한 번 실행
+    // useEffect(() => {
+    //     const storedToken = sessionStorage.getItem('token');
+    //     setToken(storedToken); // 업데이트된 token 설정
+    // }, []); // 한 번 실행
 
     const queryClient = useQueryClient();
     return useMutation({ 

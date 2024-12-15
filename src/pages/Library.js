@@ -36,12 +36,15 @@ const Library = () => {
 
     const [newCategory, setNewCategory] = useState('');
 
+    const [categoryEditMode, setCategoriesEditMode] = useState(false);
+
     const { goToDocview } = useNavigation();
     // const [docs, setDocs] = useState([
     //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
     // ]);
     
     const token = sessionStorage.getItem('token');
+    console.log('library token: ' + token);
 
     const handleCreateDoc = async (docData) => {
         // getDocs(token, user.userid);
@@ -49,12 +52,24 @@ const Library = () => {
         goToDocview();
     }
 
+    const handleCategoryEdit = async (value) => {
+        if (value) {
+            setCategoriesEditMode(true);
+            setIsVisibleAddCategory(true);
+        }
+        else {
+            setCategoriesEditMode(false);
+            setIsVisibleAddCategory(false);
+        }
+    }
+
     const handleUpdateCategory = async (newCategory) => {
         try {
             mutate(newCategory, {
                 onSuccess: () => {
                     // setUser((prev) => ({ ...prev, ...updatedAvatar }));
-                    setIsVisibleAddCategory(false);
+                    // setIsVisibleAddCategory(false);
+                    setCategoriesEditMode(false);
                     alert('생성');
                 },
                 onError: (error) => {
@@ -100,6 +115,7 @@ const Library = () => {
                 <CategorySection 
                     key= {index}
                     category={category}
+                    editMode={categoryEditMode}
                     // index={index}
                 />
             )
@@ -129,14 +145,14 @@ const Library = () => {
             </div>
                 <div class="tags-container">
                     <button
-                        onClick={() => setIsVisibleAddCategory(true)}
+                        onClick={() => handleCategoryEdit(true)}
                     >
                         +
                     </button>
                     {isVisibleAddCategory ? (
                         <div class="add-category">
                             <button
-                                onClick={()=> setIsVisibleAddCategory(false)}
+                                onClick={()=> handleCategoryEdit(false)}
                             >
                                 -
                             </button>

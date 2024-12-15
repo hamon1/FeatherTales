@@ -31,7 +31,9 @@ import Calendar from './pages/Calendar';
 import { Header } from './Header';
 
 function App() {
-  const { data: user, isLoading, error } = useUserQuery();
+  // const token = sessionStorage.getItem('token');
+  // console.log('app.js: ' + token);
+  // const { data: user, isLoading, error } = useUserQuery(token);
 
   // if (isLoading) return <p>Loading...</p>;
   // if (error) return <p>Error loading user data</p>;
