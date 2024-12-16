@@ -142,18 +142,13 @@ const Library = () => {
                 <div class="bookcase">
                     {docListComponent(docs.documents)}
                 </div>
-            </div>
                 <div class="tags-container">
-                    <button
-                        onClick={() => handleCategoryEdit(true)}
-                    >
-                        +
-                    </button>
+                    <div class="category-box">
                     {isVisibleAddCategory ? (
                         <div class="add-category">
                             <button
                                 onClick={()=> handleCategoryEdit(false)}
-                            >
+                                >
                                 -
                             </button>
                             <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
@@ -161,11 +156,19 @@ const Library = () => {
                         </div>
 
                     ) :
-                        <></>
+                    <></>
                     }
                     {/* <button>전체</button> */}
-                    {categoriesList(user.categories)}
+                        {categoriesList(user.categories)}
+                    <button
+                        onClick={() => handleCategoryEdit(true)}
+                        class="category-edit-button"
+                        >
+                        #
+                    </button>
+                    </div>
                 </div>
+            </div>
         </div>
     }
     </>
