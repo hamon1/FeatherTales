@@ -9,6 +9,8 @@ import { UseFetchUserData } from './hooks/useFetchUserData';
 import { useUserQuery } from './hooks/useUserQuery';
 import { useQueryClient } from '@tanstack/react-query';
 
+import MovigObject from './pages/MovingObject';
+
 const Login = () => {
     const { setUser } = useContext(UserContext);
     const { setRoom } = useContext(RoomContext);
@@ -81,23 +83,26 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleLogin}>
-            <input 
-                className='login username'
-                type="text" 
-                placeholder="이메일"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                className='login password'
-                type="password"
-                placeholder="비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button className='login-btn' type="submit">로그인</button> 
-        </form>
+        <>
+            <form onSubmit={handleLogin}>
+                <input 
+                    className='login username'
+                    type="text" 
+                    placeholder="이메일"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    />
+                <input
+                    className='login password'
+                    type="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    />
+                <button className='login-btn' type="submit">로그인</button> 
+            </form>
+            <MovigObject/>
+        </>
     )
 }
 
