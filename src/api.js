@@ -80,6 +80,14 @@ export const deleteCategory = async (token, categoryId) => {
     return response.data;
 }
 
+export const getDocsFromCategory = async (token, categoryType) => {
+    console.log('docs from category', categoryType);
+    const response = await api.get(`/documents/getDocsFromCategory/${categoryType}`, {
+        headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data;
+}
+
 export const createDoc = async (token, docData) => {
     console.log(token, docData);
     const response = await api.post('/documents/newdoc', docData, {

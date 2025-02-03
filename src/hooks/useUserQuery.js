@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { getUserData, updateUserData, addCategory, deleteCategory } from '../api';
-// const token = sessionStorage.getItem('token');
 
-export const useUserQuery = () => { 
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useUserQuery = (token) => { 
     console.log('?', token);
 
+    // const navigate = useNavigate();
     // useEffect(() => {
-    //     const storedToken = sessionStorage.getItem('token');
-    //     setToken(storedToken); // 업데이트된 token 설정
-    // }, []); // 한 번 실행
+    //     if(!token) {
+    //         navigate('/login'); 
+    //         return;
+    //     }
+    // }, [token, navigate]);
 
     return useQuery({ 
         queryKey: ['user'], 
@@ -21,7 +24,9 @@ export const useUserQuery = () => {
         const  data  = await getUserData(token);
         console.log('user query', data, token);
         return data;
-}})
+},
+enabled: !!token,
+})
 }
 
 export const useUserUpdateMutation = () => {

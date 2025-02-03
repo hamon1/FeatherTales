@@ -30,9 +30,12 @@ const Login = () => {
             const response = await loginUser({ email, password }); // 로그인 API 호출
 
             const token = response.token;
-            sessionStorage.setItem('token', token); // 로그인 성공 시 token 저장
+            if (token) {
+                sessionStorage.setItem('token', token); // 로그인 성공 시 token 저장
+            }
 
             console.log('login', token);
+
             await queryClient.prefetchQuery({
                 queryKey: ['user'],
                 queryFn: async() => {
@@ -80,18 +83,20 @@ const Login = () => {
     return (
         <form onSubmit={handleLogin}>
             <input 
+                className='login username'
                 type="text" 
-                placeholder="Username"
+                placeholder="이메일"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
             <input
+                className='login password'
                 type="password"
-                placeholder="Password"
+                placeholder="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit">Login</button> 
+            <button className='login-btn' type="submit">로그인</button> 
         </form>
     )
 }

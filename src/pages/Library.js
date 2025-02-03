@@ -24,12 +24,15 @@ const Library = () => {
     const { data: docs } = useDocumentQuery();
     console.log(docs);
 
+    const [ CategoryDocsData, setCategoryDocsData ] = useState([]);
+
     const { mutate } = useCategoriseUpdateMutation();
 
     // const [isLoading, setIsLoading] = useState(true);
 
     // const { user, setUser } = useContext(UserContext);
     // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
+    const [ selectedCategory, setSelectedCategory ] = useState('');
 
     const [ isVisibleAddCategory, setIsVisibleAddCategory] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -116,6 +119,9 @@ const Library = () => {
                     key= {index}
                     category={category}
                     editMode={categoryEditMode}
+                    selectedCategory={selectedCategory}
+                    setCategoryDocsData={setCategoryDocsData}
+                    setSelectedCategory={setSelectedCategory}
                     // index={index}
                 />
             )
@@ -158,8 +164,10 @@ const Library = () => {
                     ) :
                     <></>
                     }
-                    {/* <button>전체</button> */}
+                    <div class="category-scroll">
                         {categoriesList(user.categories)}
+                    </div>
+                    {/* <button>전체</button> */}
                     <button
                         onClick={() => handleCategoryEdit(true)}
                         class="category-edit-button"

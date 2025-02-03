@@ -3,12 +3,16 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 
 import { useDocUpdateMutation } from '../hooks/useDocumentQuery'
 import { useCategoriseDeleteMutation } from '../hooks/useUserQuery';
-import { deleteCategory } from '../api';
+import { deleteCategory, getDocsFromCategory } from '../api';
 
-export const CategorySection = ({category, index, editMode}) => {
+export const CategorySection = ({category, index, editMode, selectedCategory, setCategoryDocsData, setSelectedCategory}) => {
     const { mutate } = useDocUpdateMutation();
     const { mutate: mutate2 } = useCategoriseDeleteMutation();
     const token = sessionStorage.getItem('token');
+
+    const categoryClass = category.type === selectedCategory
+        ? 'categories-tag-selected'
+        : 'categories-tag';
 
     const handleCategoryDelete = async(categoryId) => {
         mutate2(categoryId, {
@@ -51,8 +55,16 @@ export const CategorySection = ({category, index, editMode}) => {
         <div class="category-container">
             <div 
                 ref={dropRef}
-                class="categories-tag" 
+                class={categoryClass} 
                 key={index}
+                onClick={async()=> {
+                    console.log('category: ' + category.type + ' / ' + category._id);
+                    setSelectedCategory(category.type);
+                    const data = await getDocsFromCategory(token, category.type);
+                    console.log("doc by category data: ", data);
+                }
+            }
+
                 >
                     {category.type}
             </div>

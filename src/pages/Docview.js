@@ -88,7 +88,7 @@ const Docview = () => {
             fetchDocData();
             
         }
-    }, [docId, token]);
+    }, []);
     
     
     const handleDocData = async () => {
@@ -102,7 +102,7 @@ const Docview = () => {
         };
         console.log('update: ', docId);
         try {
-            if (isEditing) {
+            if (!docId) {
                 await updateDoc(token, docId, data);
                 console.log('문서 수정!');
             } else {

@@ -69,28 +69,31 @@ const Register = () => {
         <form onSubmit={handleRegister}>
             {/* 이메일 입력 필드 */}
             <input 
+                className='login email'
                 type="text" 
-                placeholder="email" 
+                placeholder="이메일" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
             />
             {/* 비밀번호 입력 필드 */}
             <input 
+                className='login password'
                 type="password" 
-                placeholder="Password" 
+                placeholder="비밀번호" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
             />
             {/* 비밀번호 확인 필드 */}
             <input 
+                className='login password'
                 type="password" 
-                placeholder="Password-again" 
+                placeholder="비밀번호 확인" 
                 value={confirmPassword} 
                 onChange={(e) => setConfirmPassword(e.target.value)} 
             />
             {/* <button type="button" onClikc={() => checkPassword()}>비밀번호 확인</button> */}
             {/* 회원가입 버튼 */}
-            <button type="submit">Register</button>  
+            <button className='login-btn' type="submit">회원가입</button>  
         </form>
     )
 }
