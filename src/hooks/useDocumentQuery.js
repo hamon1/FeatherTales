@@ -3,8 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { getDocs, createDoc, updateDoc, deleteDoc, searchDocs } from '../api';
 
-export const useDocumentQuery = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useDocumentQuery = (token) => {
+    // const [token, setToken] = useState(sessionStorage.getItem('token'));
 
     console.log('useDocumentQuery', token);
     // useEffect(() => {

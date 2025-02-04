@@ -19,10 +19,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 
 const Library = () => {
-    const { data: user, isLoading, error} = useUserQuery();
+    const token = sessionStorage.getItem('token');
 
-    const { data: docs } = useDocumentQuery();
-    console.log(docs);
+    const { data: user, isLoading, error} = useUserQuery(token);
+
+    const { data: docs } = useDocumentQuery() || [];
+    console.log("user: " + user);
+    console.log("docs: " + docs);
 
     const [ CategoryDocsData, setCategoryDocsData ] = useState([]);
 
@@ -46,7 +49,6 @@ const Library = () => {
     //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
     // ]);
     
-    const token = sessionStorage.getItem('token');
     console.log('library token: ' + token);
 
     const handleCreateDoc = async (docData) => {
