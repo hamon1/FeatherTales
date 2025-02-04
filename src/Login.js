@@ -85,6 +85,7 @@ const Login = () => {
     return (
         <>
             <form onSubmit={handleLogin}>
+                <h1 className='login-title'>Feathertales</h1>
                 <input 
                     className='login username'
                     type="text" 

@@ -122,50 +122,52 @@ const Docview = () => {
 
     return (
         <div class="docView-background">
-            {/* <h1>Documentation Page</h1> */}
-            {/* <button onClick={() => goToHome()}>Home</button>  // useNavigation Hook instead of useNavigate() function to navigate to Home page. */}
-            <div class="doc-container">
-                <div class="title-container">
-                    <div class="title">title: </div>
-                    <input 
-                        class="title-box textBox"
-                        type="text"
-                        defaultValue={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="제목을 입력하세요!"
-                    >
-                    </input>
-                    <div>category: </div>
-                    <select 
-                        id="category" 
-                        value={selectedCategory} // 현재 선택된 값
-                        onChange={handleCategoryChange}
-                    >
-                        {categoriesList()}
+            <div class="doc-bookcase">
+                {/* <h1>Documentation Page</h1> */}
+                {/* <button onClick={() => goToHome()}>Home</button>  // useNavigation Hook instead of useNavigate() function to navigate to Home page. */}
+                <div class="doc-container">
+                    <div class="title-container">
+                        <div class="title">title: </div>
+                        <input 
+                            class="title-box textBox"
+                            type="text"
+                            defaultValue={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="제목을 입력하세요!"
+                            >
+                        </input>
+                        <div>category: </div>
+                        <select 
+                            id="category" 
+                            value={selectedCategory} // 현재 선택된 값
+                            onChange={handleCategoryChange}
+                            >
+                            {categoriesList()}
 
-                    </select>
-                </div>
-                <div class="content">
-                    {/* <input 
-                        class="content-box textBox"
-                    type="text"
-                    defaultValue={content}
-                    onChange={(e) => setContent(e.target.value)}
-                /> */}
-                    <textarea 
-                    class="content-box textBox"
-                    placeholder='글을 작성하세요.'
-                    value={content}  // if you want to use the content state, you should add this line.
-                    onChange={(e) => setContent(e.target.value)}
-                    
-                    >
-
-                    </textarea>
+                        </select>
                     </div>
-                <div class="actions">
-                    <button onClick={() => handleDocData().then(console.log('저장 완료!'))}>저장</button>
-                    <button onClick={() => handleDeleteDoc(token, docId).then(goToLibrary())}>삭제</button>
-                    <button onClick={() => goToLibrary()}>뒤로가기</button>
+                    <div class="content">
+                        {/* <input 
+                            class="content-box textBox"
+                            type="text"
+                            defaultValue={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        /> */}
+                        <textarea 
+                        class="content-box textBox"
+                        placeholder='글을 작성하세요.'
+                        value={content}  // if you want to use the content state, you should add this line.
+                        onChange={(e) => setContent(e.target.value)}
+                        
+                        >
+
+                        </textarea>
+                        </div>
+                    <div class="actions">
+                        <button onClick={() => handleDocData().then(console.log('저장 완료!'))}>저장</button>
+                        <button onClick={() => handleDeleteDoc(token, docId).then(goToLibrary())}>삭제</button>
+                        <button onClick={() => goToLibrary()}>뒤로가기</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -348,11 +348,16 @@ img {
   /* position: fixed; */
   position: absolute;
   pointer-events: auto;
+  color: #000;
+  font-size: 14px;
+  text-shadow: 0px 0px 6px #ffffff;
+  /* background-color: #000; */
 }
 .object-button:hover {
-  /* background-color: rgba(255, 0, 0, 0.5); */
-  
-  background-color: rgba(256, 256, 256, 0.5);
+  /* background-color: rgba(256, 256, 256, 0.5); */
+  color: #ffffff; 
+  font-size: 14px;
+  text-shadow: 0px 0px 8px #000000;
 }
 /* #mainDoor-button #library-button{
   visibility: hidden;
@@ -399,6 +404,7 @@ img {
 }
 
 .view-avatar-section {
+  padding: 80px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -425,10 +431,10 @@ img {
 }
 
 .customize-section {
+  padding: 80px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
   /* background-color: aqua; */
 }
 
@@ -441,7 +447,9 @@ img {
 .customize-section select {
   margin-bottom: 15px;
   padding: 5px;
-  width: 100%;
+  width: 50px;
+  height: 50px;
+  /* width: 100%; */
 }
 
 .button-container {
@@ -702,24 +710,31 @@ img {
 .docView-background {
   background-color: #282c34;
   position: relative;
-  left: 0;
-  right: 40px;
   height: 100vh;
   padding: 10px;
   padding-right: 20px;
   padding-bottom: 20px;
 }
-.doc-container {
+.doc-bookcase {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  padding: 20px;
-  width: 90%;
-  height: 90%;
+  padding: 5px;
+  margin: 20px;
+  margin-right: 60px;
+  height: 86%;
   border-radius: 15px;
-  /* background-color: rgba(0, 0, 0, 0.5); */
+  background-color: #b66868;
+  box-shadow: 2px 1px 6px rgba(0, 0, 0, 0.5);
+}
+.doc-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+  border-radius: 15px;
   background-color: white;
+  box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.5);
 }
 .title-container {
   /* background-color: antiquewhite; */
@@ -733,9 +748,12 @@ img {
   background: none;
   height: 40px;
   width: 90%;
+  /* background-color: #561818; */
+
 }
 .content {
   height: 80%;
+  margin-bottom: 40px;
 
 }
 .content-box {
@@ -747,5 +765,13 @@ img {
 .actions {
   /* background-color: #282c34; */
   z-index: 1000;
+}
+.actions> button {
+  margin-right: 10px;
+  background-color: #712323;
+  color: #e4b3b3;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
 }
 /* DocView End----------------------------------------------------------------*/
