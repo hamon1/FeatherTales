@@ -164,35 +164,23 @@ const Doclist_section = ({key, data, onDelete}) => {
             onMouseLeave={handleMouseUp}
             // onMouseMove={handleMouseMove}
         >
-            <div class="cover">
-                {/* <img src="book_cover.jpg" alt="book cover" /> */}
-            </div>
-            <div>{data.category}</div>
-            <div class="title-library">{data.title}</div>
-            <div class="date">{data.updatedAt}</div>
-            <div class="actions">
-                <button class="update library-btn button" onClick={()=>handleClick(data._id)}>수정</button>
-                <button class="delete library-btn button" onClick={handleDelete}>삭제</button>
+            <div class="book-page">
+
+                <div class="cover">
+                    {/* <img src="book_cover.jpg" alt="book cover" /> */}
+                </div>
+                <div class="category-tag">
+                    <div>{data.category}</div>
+                </div>
+                <div class="title-library">{data.title}</div>
+                <div class="date">{data.updatedAt}</div>
+                <div class="actions">
+                    <button class="update library-btn button" onClick={()=>handleClick(data._id)}>수정</button>
+                    <button class="delete library-btn button" onClick={handleDelete}>삭제</button>
+                </div>
             </div>
         </div>
         <CustomDragLayer/>
-        {/* <div ref={dragPreview} style={{ position: 'absolute' }}>///preview///</div> */}
-        {/* {isDraggable? (
-            <>
-                <div style={{ 
-                    position: 'fixed',
-                    top: position.y,
-                    left: position.x,
-                    zIndex: 1000,
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    color: 'white',
-                    padding: '10px',
-                    // transform: `translate(${position.x}px, ${position.y}px)`,
-                    }}> 마우스 위치: X: {position.x}, Y: {position.y} </div>
-            </>
-        ):
-        <div></div>
-        } */}
         </>
     )
 }
