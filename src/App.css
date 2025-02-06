@@ -478,46 +478,62 @@ img {
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  justify-content: center;
+  align-items: center;
 }
 .library-container {
   z-index: 10;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
-  right: 0;
-  padding: 20px;
-  margin: 10px;
-  margin-top: 20px;
-  margin-right: 70px;
-  min-width: 320px;
-  max-width: 90%;
+  padding: 40px;
+  margin: 20px 0px 20px 0px;
+  /* min-width: 320px; */
+  /* max-width: 100%; */
   width: 100%;
   height: 620px;
-  position: absolute; 
   justify-content: center;
 }
-.bookcase {
+/* .bookcase {
   z-index: 10;
-  /* background-color: aliceblue; */
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  /* right: 0; */
-  width: 90%;
+  width: 600px;
   height: 600px;
   border-radius: 15px;
   overflow-y: auto;
+} */
+.bookcase {
+  display: grid;
+  gap: 1rem;
+  padding: 20px;
+
+  top: 20px;
+  position: absolute;
+
+  /* background-color: #61dafb; */
+  /* height: 80vh; */
+  width: 90%;
+  overflow: hidden;
+
 }
+.grid-cols-1 {
+  grid-template-columns: 1fr;
+}
+.grid-cols-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
 .book {
   z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: 100%; */
   /* background-color: rgba(256, 256, 256, 0.5); */
   background-color:rgb(131, 102, 74);
   margin: 10px;
   /* margin-top: 10px; */
+  width: 540px;
   height: 80px;
   border-radius: 10px 0px 0px 10px;
   padding: 6px 0px 6px 8px;
@@ -535,6 +551,7 @@ img {
   background-color: #fff;
   /* padding: 4px; */
   /* flex-direction: row; */
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
 
 }
 .category-tag {
@@ -604,7 +621,6 @@ img {
   font-size: 15px;
 
 
-
   transition: all 0.3s ease-in-out;
 }
 .doc-add-button:hover {
@@ -630,6 +646,7 @@ img {
 }
 
 .category-box {
+  left: -14px;
   /* background-color: #712323; */
   position: relative;
   z-index: 20;
@@ -637,7 +654,6 @@ img {
   flex-direction: column;
   height: 600px;
   width: 80px;
-  left: 0;
   overflow-y: auto;
   overflow-x: hidden;
   /* flex-direction: flex-start; */
@@ -690,7 +706,9 @@ img {
 }
 .categories-tag {
   position: absolute;
-  background-color:#81b7c6;
+  background-color:#abb4b7;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+
   width: 20px;
   height: 20px;
   /* margin: 10px; */

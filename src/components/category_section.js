@@ -6,9 +6,9 @@ import { useCategoriseDeleteMutation } from '../hooks/useUserQuery';
 import { deleteCategory, getDocsFromCategory } from '../api';
 
 export const CategorySection = ({category, index, editMode, selectedCategory, setCategoryDocsData, setSelectedCategory}) => {
-    const { mutate } = useDocUpdateMutation();
-    const { mutate: mutate2 } = useCategoriseDeleteMutation();
     const token = sessionStorage.getItem('token');
+    const { mutate } = useDocUpdateMutation(token);
+    const { mutate: mutate2 } = useCategoriseDeleteMutation(token);
 
     const categoryClass = category.type === selectedCategory
         ? 'categories-tag-selected'
@@ -60,8 +60,8 @@ export const CategorySection = ({category, index, editMode, selectedCategory, se
                 onClick={async()=> {
                     console.log('category: ' + category.type + ' / ' + category._id);
                     setSelectedCategory(category.type);
-                    const data = await getDocsFromCategory(token, category.type);
-                    console.log("doc by category data: ", data);
+                //     const data = await getDocsFromCategory(token, category.type);
+                //     console.log("doc by category data: ", data);
                 }
             }
 

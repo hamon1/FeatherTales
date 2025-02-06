@@ -29,8 +29,8 @@ enabled: !!token,
 })
 }
 
-export const useUserUpdateMutation = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useUserUpdateMutation = (token) => {
+    // const [token, setToken] = useState(sessionStorage.getItem('token'));
 
     // useEffect(() => {
     //     const storedToken = sessionStorage.getItem('token');
@@ -53,8 +53,8 @@ export const useUserUpdateMutation = () => {
     });
 };   
 
-export const useCategoriseUpdateMutation = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useCategoriseUpdateMutation = (token) => {
+    // const [token, setToken] = useState(sessionStorage.getItem('token'));
 
     // useEffect(() => {
     //     const storedToken = sessionStorage.getItem('token');

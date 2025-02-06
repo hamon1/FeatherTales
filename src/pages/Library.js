@@ -16,41 +16,106 @@ import { handleDeleteDoc } from '.././utils/docUtils';
 
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useNavigate } from 'react-router-dom';
 
+import { getDocsFromCategory } from '../api';
 
 const Library = () => {
+    const navigate = useNavigate();
     const token = sessionStorage.getItem('token');
+
+    const { goToLogin } = useNavigation();
+
 
     const { data: user, isLoading, error} = useUserQuery(token);
 
-    const { data: docs } = useDocumentQuery() || [];
+    // const { data: docs } = useDocumentQuery();
+    const { data: docs, isLoading: isDocsLoading, error: docsError, refetch } = useDocumentQuery(token);
+
     console.log("user: " + user);
     console.log("docs: " + docs);
-
+    
     const [ CategoryDocsData, setCategoryDocsData ] = useState([]);
-
+    
     const { mutate } = useCategoriseUpdateMutation();
-
+    
     // const [isLoading, setIsLoading] = useState(true);
-
+    
     // const { user, setUser } = useContext(UserContext);
     // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
     const [ selectedCategory, setSelectedCategory ] = useState('');
-
+    
     const [ isVisibleAddCategory, setIsVisibleAddCategory] = useState(false);
     const [categories, setCategories] = useState([]);
-
+    
     const [newCategory, setNewCategory] = useState('');
-
+    
     const [categoryEditMode, setCategoriesEditMode] = useState(false);
-
+    
     const { goToDocview } = useNavigation();
     // const [docs, setDocs] = useState([
-    //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-    // ]);
-    
-    console.log('library token: ' + token);
+        //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+        // ]);
+        
+        console.log('library token: ' + token);
+        
+        const [isTwoColumns, setIsTwoColumns] = useState(window.innerWidth > 768);
+        
+        const [retryCount, setRetryCount] = useState(0);
+        const maxRetries = 3;
+        
+        useEffect(() => {
+            if (!token) {
+                goToLogin(); // 토큰이 없으면 로그인 페이지로 이동
+                
+                return;
+            }
+            
+            if (!docs && retryCount < maxRetries) {
+                setTimeout(() => {
+                    refetch(); // 문서 데이터 다시 요청
+                    setRetryCount((prev) => prev + 1);
+                }, 2000);
+            } else if (!docs && retryCount >= maxRetries) {
+                goToLogin(); // 일정 횟수 초과하면 로그인 페이지로 이동
+                // navigate.goToLogin();
+            }
+    }, [docs, token, retryCount, refetch]);
 
+    // if (isUserLoading || isDocsLoading) return <LoadingPage isLoading />;
+    // if (userError || docsError) {
+        //     console.error("Error:", userError || docsError);
+        //     return <p>오류가 발생했습니다. 다시 시도해 주세요.</p>;
+        // }
+        
+    useEffect(() => {
+        if (selectedCategory !== undefined && selectedCategory !== null) {
+            console.log('category: ' + selectedCategory);
+    
+            const fetchData = async () => {
+                try {
+                    const data_ = await getDocsFromCategory(token, selectedCategory);
+                    console.log("new data: ", data_);
+                } catch (error) {
+                    console.error("Error fetching data: ", error);
+                }
+            };
+    
+            fetchData();
+        }
+    }, [selectedCategory])
+    
+    useEffect(() => {
+        const handleResize = () => {
+            setIsTwoColumns(window.innerWidth > 1200); //768
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    },[]);
+
+    if (!docs) return <p>문서 데이터를 불러오는 중...</p>;
+    
     const handleCreateDoc = async (docData) => {
         // getDocs(token, user.userid);
 
@@ -87,6 +152,7 @@ const Library = () => {
         }
     }
 
+
     function docListComponent(docData) {
         const len = docData.length;
         if (len === 0) {
@@ -102,6 +168,25 @@ const Library = () => {
             />
         )})
     }
+
+    const isValidCategory = (category) => {
+    // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
+    const regex = /^[가-힣a-zA-Z0-9_]+$/;
+
+    if (!category.trim()) {
+        alert("카테고리 이름을 입력하세요.");
+        return false;
+    }
+    
+    if (!regex.test(category)) {
+        alert("카테고리 이름에는 한글, 영문, 숫자, 밑줄(_)만 사용할 수 있습니다.");
+        return false;
+    }
+
+    handleUpdateCategory(category);
+
+    return true;
+};
 
     function categoriesList(categories) {
 
@@ -147,8 +232,14 @@ const Library = () => {
                         <p>avatar</p>
                     </div> */}
                 </div>
-                <div class="bookcase">
-                    {docListComponent(docs.documents)}
+                <div 
+                // class="bookcase" 
+                    className={`bookcase ${isTwoColumns ? "grid grid-cols-2 gap-4 p-4" : "grid grid-cols-1 gap-4 p-4"}`}
+                >
+                    {/* {docListComponent(docs.documents)} */}
+                    {docs.documents.length > 0 ? docs.documents.map(doc => (
+                        <Doclist_section key={doc.docid} data={doc} />
+                    )) : <p>No documents yet</p>}
                 </div>
                 <div class="tags-container">
                     <div class="category-box">
@@ -160,7 +251,7 @@ const Library = () => {
                                 -
                             </button>
                             <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
-                            <button onClick={() => handleUpdateCategory(newCategory)}>카테고리 추가</button>
+                            <button onClick={() => isValidCategory(newCategory)}>카테고리 추가</button>
                         </div>
 
                     ) :

@@ -16,13 +16,15 @@ import { handleDeleteDoc } from '../utils/docUtils';
 import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
+    const token = sessionStorage.getItem('token');
+    
     const {docId} = useParams();
     console.log(docId);
     const { goToHome, goToLibrary } = useNavigation();
     
-    const { data: user, isLoading, error} = useUserQuery();
+    const { data: user, isLoading, error} = useUserQuery(token);
 
-    const { data: docs } = useDocumentQuery();
+    const { data: docs } = useDocumentQuery(token);
     // const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
     // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
 
@@ -35,7 +37,6 @@ const Docview = () => {
     // const [isLoading, setIsLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
-    const token = sessionStorage.getItem('token');
 
     console.log(token);
 

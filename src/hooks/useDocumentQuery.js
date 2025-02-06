@@ -23,8 +23,8 @@ export const useDocumentQuery = (token) => {
     })
 };
 
-export const useDocCreateMutation = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useDocCreateMutation = (token) => {
+    // const [token, setToken] = useState(sessionStorage.getItem('token'));
 
     // useEffect(() => {
     //     const storedToken = sessionStorage.getItem('token');
@@ -48,8 +48,8 @@ export const useDocCreateMutation = () => {
     })
 }
 
-export const useDocUpdateMutation = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+export const useDocUpdateMutation = (token) => {
+    // const [token, setToken] = useState(sessionStorage.getItem('token'));
 
     // useEffect(() => {
     //     const storedToken = sessionStorage.getItem('token');

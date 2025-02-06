@@ -12,7 +12,7 @@ const Customize = () => {
     const { data: user, isLoading } = useUserQuery(token);
     console.log('customize.js user data: ' + user);
     console.log('costom token: ' , token);
-    const { mutate } = useUserUpdateMutation();
+    const { mutate } = useUserUpdateMutation(token);
     const { goToHome } = useNavigation();
 
     // const { user, setUser } = useContext(UserContext);
