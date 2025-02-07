@@ -17,7 +17,7 @@ import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
     const token = sessionStorage.getItem('token');
-    
+
     const {docId} = useParams();
     console.log(docId);
     const { goToHome, goToLibrary } = useNavigation();
@@ -110,6 +110,7 @@ const Docview = () => {
                 await createDoc(token, data);
                 console.log('문서 생성!');
             }
+            alert('문서 생성!');
         } catch (error) {
             console.error('Failed to create document', error.response.data.msg);
         }
