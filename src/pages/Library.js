@@ -170,23 +170,23 @@ const Library = () => {
     }
 
     const isValidCategory = (category) => {
-    // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
-    const regex = /^[가-힣a-zA-Z0-9_]+$/;
+        // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
+        const regex = /^[가-힣a-zA-Z0-9_]+$/;
 
-    if (!category.trim()) {
-        alert("카테고리 이름을 입력하세요.");
-        return false;
-    }
-    
-    if (!regex.test(category)) {
-        alert("카테고리 이름에는 한글, 영문, 숫자, 밑줄(_)만 사용할 수 있습니다.");
-        return false;
-    }
+        if (!category.trim()) {
+            alert("카테고리 이름을 입력하세요.");
+            return false;
+        }
+        
+        if (!regex.test(category)) {
+            alert("카테고리 이름에는 한글, 영문, 숫자, 밑줄(_)만 사용할 수 있습니다.");
+            return false;
+        }
 
-    handleUpdateCategory(category);
+        handleUpdateCategory(category);
 
-    return true;
-};
+        return true;
+    };
 
     function categoriesList(categories) {
 

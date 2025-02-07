@@ -482,6 +482,8 @@ img {
   align-items: center;
 }
 .library-container {
+  position: relative;
+  overflow: hidden;
   z-index: 10;
   background: rgba(0, 0, 0, 0.5);
   padding: 40px;
@@ -489,7 +491,7 @@ img {
   /* min-width: 320px; */
   /* max-width: 100%; */
   width: 100%;
-  height: 620px;
+  height: 80vh;
   justify-content: center;
 }
 /* .bookcase {
@@ -516,6 +518,7 @@ img {
   width: 90%;
   overflow: hidden;
 
+  overflow-y: auto;
 }
 .grid-cols-1 {
   grid-template-columns: 1fr;
