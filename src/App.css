@@ -822,3 +822,21 @@ img {
   padding: 5px 10px;
 }
 /* DocView End----------------------------------------------------------------*/
+
+/* Loading.js ----------------------------------------------------------------*/
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #a5c9e2;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+
+/* Loading End----------------------------------------------------------------*/

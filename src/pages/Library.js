@@ -10,7 +10,8 @@ import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
 import Doclist_section from '../components/doclist_section';
 import { CategorySection } from '../components/category_section';
-import LoadingPage from './LoadingPage';
+// import LoadingPage from './LoadingPage';
+import Loading from './Loading';
 
 import { handleDeleteDoc } from '.././utils/docUtils';
 
@@ -59,7 +60,7 @@ const Library = () => {
 
     const { goToDocview } = useNavigation();
         
-        console.log('library token: ' + token);
+        console.log('📍library / token: ' + token);
         
         const [isTwoColumns, setIsTwoColumns] = useState(window.innerWidth > 768);
         
@@ -133,7 +134,11 @@ const Library = () => {
         return () => window.removeEventListener('resize', handleResize);
     },[]);
 
-    if (!docs) return <p>문서 데이터를 불러오는 중...</p>;
+    if (!docs) 
+    return 
+        <Loading/>
+
+    // <p>문서 데이터를 불러오는 중...</p>;
     
     const handleCreateDoc = async (docData) => {
 
@@ -172,7 +177,9 @@ const Library = () => {
     function docListComponent(docData) {
         const len = docData.length;
         if (len === 0) {
-            return <p>No documents yet</p>;
+            return 
+            // <p>No documents yet</p>;
+            <Loading/>
         }
 
         
@@ -227,7 +234,8 @@ const Library = () => {
     return (
         <>
         {isLoading ? (
-            <LoadingPage isLoading={isLoading}/>
+            // <LoadingPage isLoading={isLoading}/>
+            <Loading/>
         ):
         <div class="library-background">
             <div class="library-container">
@@ -239,7 +247,7 @@ const Library = () => {
                     className={`bookcase ${isTwoColumns ? "grid grid-cols-2 gap-4 p-4" : "grid grid-cols-1 gap-4 p-4"}`}
                 >
                     {isFetchingDocs ? (
-                        <p>문서를 불러오는 중...</p>
+                        <Loading/>
                     ) : error ? (
                         <p>문서를 불러오는 중 오류 발생: {error}</p>
                     ) : filteredDocs.length > 0 ? (
