@@ -58,9 +58,6 @@ const Library = () => {
     const [fetchError, setFetchError] = useState(null);
 
     const { goToDocview } = useNavigation();
-    // const [docs, setDocs] = useState([
-        //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-        // ]);
         
         console.log('library token: ' + token);
         
@@ -83,31 +80,12 @@ const Library = () => {
                 }, 2000);
             } else if (!docs && retryCount >= maxRetries) {
                 goToLogin(); // 일정 횟수 초과하면 로그인 페이지로 이동
-                // navigate.goToLogin();
             }
     }, [docs, token, retryCount, refetch]);
 
-    // if (isUserLoading || isDocsLoading) return <LoadingPage isLoading />;
-    // if (userError || docsError) {
-        //     console.error("Error:", userError || docsError);
-        //     return <p>오류가 발생했습니다. 다시 시도해 주세요.</p>;
         // }
         
     useEffect(() => {
-        // if (selectedCategory !== undefined && selectedCategory !== null) {
-        //     console.log('category: ' + selectedCategory);
-    
-        //     const fetchData = async () => {
-        //         try {
-        //             const data_ = await getDocsFromCategory(token, selectedCategory);
-        //             console.log("new data: ", data_);
-        //         } catch (error) {
-        //             console.error("Error fetching data: ", error);
-        //         }
-        //     };
-    
-        //     fetchData();
-        // }
         console.log("📍 selected Category data fetching: ", selectedCategory);
 
         if (!selectedCategory) {
@@ -158,7 +136,6 @@ const Library = () => {
     if (!docs) return <p>문서 데이터를 불러오는 중...</p>;
     
     const handleCreateDoc = async (docData) => {
-        // getDocs(token, user.userid);
 
         goToDocview();
     }
@@ -178,8 +155,6 @@ const Library = () => {
         try {
             mutate(newCategory, {
                 onSuccess: () => {
-                    // setUser((prev) => ({ ...prev, ...updatedAvatar }));
-                    // setIsVisibleAddCategory(false);
                     setCategoriesEditMode(false);
                     alert('생성');
                 },
@@ -235,13 +210,6 @@ const Library = () => {
             return <p>No categories yet</p>;
         }
         return categories.map((category, index) => {
-            // const [, dropRef] = useDrop({
-            //     accept: 'DOC',
-            //     drop: (draggedItem) => {
-            //         console.log(draggedItem);
-            //     }
-            // })
-            // return (<div class="categories-tag" key={index}>{category.type}</div>)
             return (
                 <CategorySection 
                     key= {index}
@@ -268,7 +236,6 @@ const Library = () => {
                     <button class="doc-add-button" onClick={()=> handleCreateDoc()}>+</button>
                 </div>
                 <div 
-                // class="bookcase" 
                     className={`bookcase ${isTwoColumns ? "grid grid-cols-2 gap-4 p-4" : "grid grid-cols-1 gap-4 p-4"}`}
                 >
                     {isFetchingDocs ? (
@@ -282,9 +249,7 @@ const Library = () => {
                     ) : (
                         <p>No documents yet</p>
                     )}
-                    {/* {filteredDocs.length > 0 ? filteredDocs.map(doc => (
-                        <Doclist_section key={doc.docid} data={doc} />
-                    )) : <p>No documents yet</p>} */}
+
                 </div>
                 <div class="tags-container">
                     <div class="category-box">
