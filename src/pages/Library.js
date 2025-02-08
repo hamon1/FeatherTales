@@ -34,6 +34,8 @@ const Library = () => {
 
     console.log("user: " + user);
     console.log("docs: " + docs);
+
+    const [filteredDocs, setFilteredDocs] = useState([]);
     
     const [ CategoryDocsData, setCategoryDocsData ] = useState([]);
     
@@ -51,7 +53,10 @@ const Library = () => {
     const [newCategory, setNewCategory] = useState('');
     
     const [categoryEditMode, setCategoriesEditMode] = useState(false);
-    
+
+    const [isFetchingDocs, setIsFetchingDocs] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
+
     const { goToDocview } = useNavigation();
     // const [docs, setDocs] = useState([
         //     // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
@@ -89,21 +94,57 @@ const Library = () => {
         // }
         
     useEffect(() => {
-        if (selectedCategory !== undefined && selectedCategory !== null) {
-            console.log('category: ' + selectedCategory);
+        // if (selectedCategory !== undefined && selectedCategory !== null) {
+        //     console.log('category: ' + selectedCategory);
     
-            const fetchData = async () => {
-                try {
-                    const data_ = await getDocsFromCategory(token, selectedCategory);
-                    console.log("new data: ", data_);
-                } catch (error) {
-                    console.error("Error fetching data: ", error);
-                }
-            };
+        //     const fetchData = async () => {
+        //         try {
+        //             const data_ = await getDocsFromCategory(token, selectedCategory);
+        //             console.log("new data: ", data_);
+        //         } catch (error) {
+        //             console.error("Error fetching data: ", error);
+        //         }
+        //     };
     
-            fetchData();
+        //     fetchData();
+        // }
+        console.log("📍 selected Category data fetching: ", selectedCategory);
+
+        if (!selectedCategory) {
+            setFilteredDocs(docs?.documents || []);
+            return;
         }
-    }, [selectedCategory])
+
+
+        const fetchData = async () => {
+            setIsFetchingDocs(true);
+            setFetchError(null);
+
+            try {
+                const data_ = await getDocsFromCategory(token, selectedCategory);
+                console.log("📍 new data: ", data_.data);
+
+                if (data_.data && Array.isArray(data_.data)) {
+                    setFilteredDocs(data_.data);
+                } else {
+                    console.error("❌ Invalid data format: ", data_);
+                    setFilteredDocs([]);
+                }
+
+            } catch (error) {
+                console.error("❌ Error fetching data: ", error);
+                setFetchError(error);
+                setFilteredDocs([]);
+            } finally {
+                setIsFetchingDocs(false);
+            }
+        };
+
+        fetchData();
+        
+        console.log("📍 fetched data(category): ", filteredDocs.length);
+
+    }, [selectedCategory, docs])
     
     useEffect(() => {
         const handleResize = () => {
@@ -209,7 +250,6 @@ const Library = () => {
                     selectedCategory={selectedCategory}
                     setCategoryDocsData={setCategoryDocsData}
                     setSelectedCategory={setSelectedCategory}
-                    // index={index}
                 />
             )
     })
@@ -223,23 +263,28 @@ const Library = () => {
         ):
         <div class="library-background">
             <div class="library-container">
-                {/* <h1>t</h1> */}
-                {/* <div> */}
+
                 <div class="add_button">
                     <button class="doc-add-button" onClick={()=> handleCreateDoc()}>+</button>
-                {/* </div> */}
-                {/* <div class="avatar library">
-                        <p>avatar</p>
-                    </div> */}
                 </div>
                 <div 
                 // class="bookcase" 
                     className={`bookcase ${isTwoColumns ? "grid grid-cols-2 gap-4 p-4" : "grid grid-cols-1 gap-4 p-4"}`}
                 >
-                    {/* {docListComponent(docs.documents)} */}
-                    {docs.documents.length > 0 ? docs.documents.map(doc => (
+                    {isFetchingDocs ? (
+                        <p>문서를 불러오는 중...</p>
+                    ) : error ? (
+                        <p>문서를 불러오는 중 오류 발생: {error}</p>
+                    ) : filteredDocs.length > 0 ? (
+                        filteredDocs.map(doc => (
+                            <Doclist_section key={doc.docid} data={doc} />
+                        ))
+                    ) : (
+                        <p>No documents yet</p>
+                    )}
+                    {/* {filteredDocs.length > 0 ? filteredDocs.map(doc => (
                         <Doclist_section key={doc.docid} data={doc} />
-                    )) : <p>No documents yet</p>}
+                    )) : <p>No documents yet</p>} */}
                 </div>
                 <div class="tags-container">
                     <div class="category-box">
@@ -260,7 +305,6 @@ const Library = () => {
                     <div class="category-scroll">
                         {categoriesList(user.categories)}
                     </div>
-                    {/* <button>전체</button> */}
                     <button
                         onClick={() => handleCategoryEdit(true)}
                         class="category-edit-button"

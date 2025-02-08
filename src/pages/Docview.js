@@ -38,7 +38,7 @@ const Docview = () => {
     const [isEditing, setIsEditing] = useState(false);
 
 
-    console.log(token);
+    console.log("📍 Docview: ", token);
 
     useEffect(() => {
         if(user) {
@@ -93,6 +93,7 @@ const Docview = () => {
     
     
     const handleDocData = async () => {
+        console.log("📍 Handling doc data");
         console.log(isEditing);
         console.log(selectedCategory);
         const data = {
@@ -103,15 +104,15 @@ const Docview = () => {
         };
         console.log('update: ', docId);
         try {
-            if (!docId) {
+            if (isEditing) {
                 await updateDoc(token, docId, data);
                 console.log('문서 수정!');
             } else {
                 await createDoc(token, data);
                 console.log('문서 생성!');
             }
-            alert('문서 생성!');
-        } catch (error) {
+            alert('문서 저장!');
+            } catch (error) {
             console.error('Failed to create document', error.response.data.msg);
         }
 
