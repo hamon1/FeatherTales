@@ -10,7 +10,7 @@ import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
 
 import { useNavigation } from '../utils/navigate';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { handleDeleteDoc } from '../utils/docUtils';
 import { DocsContext } from '../contexts/DocContext';
@@ -19,7 +19,7 @@ const Docview = () => {
     const token = sessionStorage.getItem('token');
 
     const {docId} = useParams();
-    console.log(docId);
+
     const { goToHome, goToLibrary } = useNavigation();
     
     const { data: user, isLoading, error} = useUserQuery(token);
@@ -47,6 +47,13 @@ const Docview = () => {
         }
     }, [user]);
 
+    const navigate = useNavigate();
+
+    const changheDocId = (newDocId) => {
+        navigate(`/docview/${newDocId}`);
+    };
+
+
     const categoriesList = () => {
         console.log(categories.length);
         console.log('categories: ', categories);
@@ -63,9 +70,9 @@ const Docview = () => {
     }
 
     useEffect(() => {
-        console.log("fetching", docId);
+        console.log("📍 fetching: ", docId);
         if(docId) {
-            setIsEditing(true);
+            // setIsEditing(true);
             const fetchDocData = async () => {
                 console.log('Fetching');
                 try {
@@ -108,12 +115,14 @@ const Docview = () => {
                 await updateDoc(token, docId, data);
                 console.log('문서 수정!');
             } else {
-                await createDoc(token, data);
-                console.log('문서 생성!');
+                const newDoc = await createDoc(token, data);
+                console.log('문서 생성!', newDoc.doc._id);
+                changheDocId(newDoc.doc._id);
+                setIsEditing(true);
             }
             alert('문서 저장!');
             } catch (error) {
-            console.error('Failed to create document', error.response.data.msg);
+            console.error('Failed to create document', error);
         }
 
     }

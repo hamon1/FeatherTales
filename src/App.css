@@ -516,7 +516,8 @@ img {
   /* background-color: #61dafb; */
   /* height: 80vh; */
   width: 90%;
-  overflow: hidden;
+  max-height: 80vh;
+  /* overflow: hidden; */
 
   overflow-y: auto;
 }
