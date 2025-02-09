@@ -30,7 +30,6 @@ const Library = () => {
 
     const { data: user, isLoading, error} = useUserQuery(token);
 
-    // const { data: docs } = useDocumentQuery();
     const { data: docs, isLoading: isDocsLoading, error: docsError, refetch } = useDocumentQuery(token);
 
     console.log("user: " + user);
@@ -139,9 +138,25 @@ const Library = () => {
         <Loading/>
 
     // <p>문서 데이터를 불러오는 중...</p>;
+    const handleDeleteDoc = async (token, docId, refetch, setFilteredDocs) => {
+        try {
+            // const response = await api.delete(`/documents/${docId}`, {
+            //     headers: { Authorization: `Bearer ${token}` }
+            // });
+            deleteDoc(token, docId);
     
-    const handleCreateDoc = async (docData) => {
-
+            console.log("✅ 삭제 완료");
+            await refetch(); // 문서 목록 다시 불러오기
+    
+            // 🔥 refetch 후 수동으로 상태 업데이트
+            setFilteredDocs((prevDocs) => prevDocs.filter(doc => doc._id !== docId));
+            console.log("data refetched");
+        } catch (error) {
+            console.error("❌ 삭제 실패:", error);
+        }
+    };
+    
+    const handleCreateDoc = async () => {
         goToDocview();
     }
 
@@ -173,24 +188,6 @@ const Library = () => {
         }
     }
 
-
-    function docListComponent(docData) {
-        const len = docData.length;
-        if (len === 0) {
-            return 
-            // <p>No documents yet</p>;
-            <Loading/>
-        }
-
-        
-        return docData.map(doc => {
-            return (<Doclist_section 
-                key= {doc.docid}
-                data={doc}
-                onDelete={() => handleDeleteDoc(token, doc.docid)}
-            />
-        )})
-    }
 
     const isValidCategory = (category) => {
         // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
@@ -234,7 +231,6 @@ const Library = () => {
     return (
         <>
         {isLoading ? (
-            // <LoadingPage isLoading={isLoading}/>
             <Loading/>
         ):
         <div class="library-background">
@@ -252,7 +248,7 @@ const Library = () => {
                         <p>문서를 불러오는 중 오류 발생: {error}</p>
                     ) : filteredDocs.length > 0 ? (
                         filteredDocs.map(doc => (
-                            <Doclist_section key={doc.docid} data={doc} />
+                            <Doclist_section key={doc._id} data={doc} onDelete={() => handleDeleteDoc(token, doc._id, refetch, setFilteredDocs)} refetch={refetch}/>
                         ))
                     ) : (
                         <p>No documents yet</p>
