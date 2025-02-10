@@ -262,6 +262,12 @@ const Library = () => {
                     <></>
                     }
                     <div class="category-scroll">
+                        <button 
+                                className={selectedCategory === '' ? "categories-tag-selected" : "categories-tag"}
+                                onClick={() => setSelectedCategory('')}
+                            > 
+                            전체
+                        </button>
                         {categoriesList(user.categories)}
                     </div>
                     <button
