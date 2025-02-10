@@ -10,7 +10,6 @@ import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
 import Doclist_section from '../components/doclist_section';
 import { CategorySection } from '../components/category_section';
-// import LoadingPage from './LoadingPage';
 import Loading from './Loading';
 
 import { handleDeleteDoc } from '.././utils/docUtils';
@@ -41,10 +40,6 @@ const Library = () => {
     
     const { mutate } = useCategoriseUpdateMutation();
     
-    // const [isLoading, setIsLoading] = useState(true);
-    
-    // const { user, setUser } = useContext(UserContext);
-    // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to get docs.
     const [ selectedCategory, setSelectedCategory ] = useState('');
     
     const [ isVisibleAddCategory, setIsVisibleAddCategory] = useState(false);
@@ -83,7 +78,6 @@ const Library = () => {
             }
     }, [docs, token, retryCount, refetch]);
 
-        // }
         
     useEffect(() => {
         console.log("📍 selected Category data fetching: ", selectedCategory);
@@ -137,12 +131,8 @@ const Library = () => {
     return 
         <Loading/>
 
-    // <p>문서 데이터를 불러오는 중...</p>;
     const handleDeleteDoc = async (token, docId, refetch, setFilteredDocs) => {
         try {
-            // const response = await api.delete(`/documents/${docId}`, {
-            //     headers: { Authorization: `Bearer ${token}` }
-            // });
             deleteDoc(token, docId);
     
             console.log("✅ 삭제 완료");
@@ -189,8 +179,8 @@ const Library = () => {
     }
 
 
+    // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
     const isValidCategory = (category) => {
-        // 공백 또는 특수문자 포함 여부 확인 (한글, 영문, 숫자, 밑줄(_)만 허용)
         const regex = /^[가-힣a-zA-Z0-9_]+$/;
 
         if (!category.trim()) {

@@ -44,10 +44,6 @@ export const CategorySection = ({category, index, editMode, selectedCategory, se
                         onError: (error) => {
                             console.error("Failed to update category", error);
                         },
-                        // variables: {
-                        //     docId: draggedItem.data._id,
-                        //     data,
-                        // },
                     })
                 }
             })
@@ -61,8 +57,6 @@ export const CategorySection = ({category, index, editMode, selectedCategory, se
                 onClick={async()=> {
                     console.log('category: ' + category.type + ' / ' + category._id);
                     setSelectedCategory(category.type);
-                //     const data = await getDocsFromCategory(token, category.type);
-                //     console.log("doc by category data: ", data);
                 }
             }
                 >

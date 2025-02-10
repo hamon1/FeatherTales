@@ -25,8 +25,6 @@ const Docview = () => {
     const { data: user, isLoading, error} = useUserQuery(token);
 
     const { data: docs } = useDocumentQuery(token);
-    // const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
-    // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
 
     const [categories, setCategories] = useState([]);
 
@@ -34,7 +32,7 @@ const Docview = () => {
     const [title, setTitle] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [content, setContent] = useState('');
-    // const [isLoading, setIsLoading] = useState(true);
+
     const [isEditing, setIsEditing] = useState(false);
 
 
@@ -60,7 +58,6 @@ const Docview = () => {
         if (categories) {
             return categories.map((categoryItem, index) => (
                 <>
-                    {/* <div key={`div-${index}`}>{categoryItem.type}?</div> */}
                     <option key={`option-${index}`} value={categoryItem.type}>{categoryItem.type}</option>
                 </>
             ));
@@ -72,7 +69,6 @@ const Docview = () => {
     useEffect(() => {
         console.log("📍 fetching: ", docId);
         if(docId) {
-            // setIsEditing(true);
             const fetchDocData = async () => {
                 console.log('Fetching');
                 try {
@@ -135,8 +131,6 @@ const Docview = () => {
     return (
         <div class="docView-background">
             <div class="doc-bookcase">
-                {/* <h1>Documentation Page</h1> */}
-                {/* <button onClick={() => goToHome()}>Home</button>  // useNavigation Hook instead of useNavigate() function to navigate to Home page. */}
                 <div class="doc-container">
                     <div class="title-container">
                         <div class="title">title: </div>
@@ -159,18 +153,11 @@ const Docview = () => {
                         </select>
                     </div>
                     <div class="content">
-                        {/* <input 
-                            class="content-box textBox"
-                            type="text"
-                            defaultValue={content}
-                            onChange={(e) => setContent(e.target.value)}
-                        /> */}
                         <textarea 
                         class="content-box textBox"
                         placeholder='글을 작성하세요.'
                         value={content}  // if you want to use the content state, you should add this line.
                         onChange={(e) => setContent(e.target.value)}
-                        
                         >
 
                         </textarea>
