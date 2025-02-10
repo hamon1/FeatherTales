@@ -482,6 +482,8 @@ img {
   align-items: center;
 }
 .library-container {
+  position: relative;
+  overflow: hidden;
   z-index: 10;
   background: rgba(0, 0, 0, 0.5);
   padding: 40px;
@@ -489,7 +491,7 @@ img {
   /* min-width: 320px; */
   /* max-width: 100%; */
   width: 100%;
-  height: 620px;
+  height: 80vh;
   justify-content: center;
 }
 /* .bookcase {
@@ -514,8 +516,10 @@ img {
   /* background-color: #61dafb; */
   /* height: 80vh; */
   width: 90%;
-  overflow: hidden;
+  max-height: 80vh;
+  /* overflow: hidden; */
 
+  overflow-y: auto;
 }
 .grid-cols-1 {
   grid-template-columns: 1fr;
@@ -690,6 +694,9 @@ img {
 .category-scroll::-webkit-scrollbar {
   display: none;
 }
+.category-scroll> button {
+  border: none;
+}
 .category-container{
   position: relative;
   /* position: absolute; */
@@ -712,9 +719,9 @@ img {
   width: 20px;
   height: 20px;
   /* margin: 10px; */
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* border: 2px solid; */
-  border-color: #fff;
+  /* border-color: #fff; */
   left: 0px;
   
   color: transparent;
@@ -728,7 +735,7 @@ img {
   /* margin: 10px; */
   /* border-radius: 10px; */
   /* border: 2px solid; */
-  border-color: #fff;
+  /* border-color: #fff; */
   left: 0px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -819,3 +826,21 @@ img {
   padding: 5px 10px;
 }
 /* DocView End----------------------------------------------------------------*/
+
+/* Loading.js ----------------------------------------------------------------*/
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #a5c9e2;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+
+/* Loading End----------------------------------------------------------------*/

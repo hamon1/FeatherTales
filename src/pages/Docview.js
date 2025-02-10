@@ -10,23 +10,21 @@ import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
 
 import { useNavigation } from '../utils/navigate';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { handleDeleteDoc } from '../utils/docUtils';
 import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
     const token = sessionStorage.getItem('token');
-    
+
     const {docId} = useParams();
-    console.log(docId);
+
     const { goToHome, goToLibrary } = useNavigation();
     
     const { data: user, isLoading, error} = useUserQuery(token);
 
     const { data: docs } = useDocumentQuery(token);
-    // const { user, setUser } = useContext(UserContext); // use UserContext to get user and token.
-    // const { docs, setDocs } = useContext(DocsContext); // use DocsContext to
 
     const [categories, setCategories] = useState([]);
 
@@ -34,11 +32,11 @@ const Docview = () => {
     const [title, setTitle] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [content, setContent] = useState('');
-    // const [isLoading, setIsLoading] = useState(true);
+
     const [isEditing, setIsEditing] = useState(false);
 
 
-    console.log(token);
+    console.log("📍 Docview: ", token);
 
     useEffect(() => {
         if(user) {
@@ -47,13 +45,19 @@ const Docview = () => {
         }
     }, [user]);
 
+    const navigate = useNavigate();
+
+    const changheDocId = (newDocId) => {
+        navigate(`/docview/${newDocId}`);
+    };
+
+
     const categoriesList = () => {
         console.log(categories.length);
         console.log('categories: ', categories);
         if (categories) {
             return categories.map((categoryItem, index) => (
                 <>
-                    {/* <div key={`div-${index}`}>{categoryItem.type}?</div> */}
                     <option key={`option-${index}`} value={categoryItem.type}>{categoryItem.type}</option>
                 </>
             ));
@@ -63,9 +67,8 @@ const Docview = () => {
     }
 
     useEffect(() => {
-        console.log("fetching", docId);
+        console.log("📍 fetching: ", docId);
         if(docId) {
-            setIsEditing(true);
             const fetchDocData = async () => {
                 console.log('Fetching');
                 try {
@@ -93,6 +96,7 @@ const Docview = () => {
     
     
     const handleDocData = async () => {
+        console.log("📍 Handling doc data");
         console.log(isEditing);
         console.log(selectedCategory);
         const data = {
@@ -103,15 +107,18 @@ const Docview = () => {
         };
         console.log('update: ', docId);
         try {
-            if (!docId) {
+            if (isEditing) {
                 await updateDoc(token, docId, data);
                 console.log('문서 수정!');
             } else {
-                await createDoc(token, data);
-                console.log('문서 생성!');
+                const newDoc = await createDoc(token, data);
+                console.log('문서 생성!', newDoc.doc._id);
+                changheDocId(newDoc.doc._id);
+                setIsEditing(true);
             }
-        } catch (error) {
-            console.error('Failed to create document', error.response.data.msg);
+            alert('문서 저장!');
+            } catch (error) {
+            console.error('Failed to create document', error);
         }
 
     }
@@ -124,8 +131,6 @@ const Docview = () => {
     return (
         <div class="docView-background">
             <div class="doc-bookcase">
-                {/* <h1>Documentation Page</h1> */}
-                {/* <button onClick={() => goToHome()}>Home</button>  // useNavigation Hook instead of useNavigate() function to navigate to Home page. */}
                 <div class="doc-container">
                     <div class="title-container">
                         <div class="title">title: </div>
@@ -148,18 +153,11 @@ const Docview = () => {
                         </select>
                     </div>
                     <div class="content">
-                        {/* <input 
-                            class="content-box textBox"
-                            type="text"
-                            defaultValue={content}
-                            onChange={(e) => setContent(e.target.value)}
-                        /> */}
                         <textarea 
                         class="content-box textBox"
                         placeholder='글을 작성하세요.'
                         value={content}  // if you want to use the content state, you should add this line.
                         onChange={(e) => setContent(e.target.value)}
-                        
                         >
 
                         </textarea>

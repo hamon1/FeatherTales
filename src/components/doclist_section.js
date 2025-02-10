@@ -37,7 +37,7 @@ const CustomDragLayer = () => {
     )
 }
 
-const Doclist_section = ({key, data, onDelete}) => {
+const Doclist_section = ({key, data, onDelete, refetch}) => {
     const [isDraggable, setIsDraggable] = useState(false);
     const [position, setPosition] = useState({x: -100, y: -100});
 
@@ -53,6 +53,8 @@ const Doclist_section = ({key, data, onDelete}) => {
         item: { data },
         canDrag: () => isDraggable,
     })
+
+    console.log("📍 doclist section: ");
 
     // useEffect(() => {
     //     console.log('useEffect[drag]: ', isDraggable, position.x);
@@ -135,6 +137,11 @@ const Doclist_section = ({key, data, onDelete}) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 onDelete();
+
+                alert("삭제 완료");
+                // refetch();
+
+                console.log("✅ deteted and refetched");
             } else if (result.isCancelled) {
                 console.log('Delete canceled');
             }

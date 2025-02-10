@@ -10,7 +10,6 @@ import { useNavigation } from '../utils/navigate';
 
 import LoadingPage from './LoadingPage';
 import Mailbox from './Mailbox';
-// import { header } from '../Header';
 
 const Home = () => { 
     const token = sessionStorage.getItem('token');
@@ -18,13 +17,11 @@ const Home = () => {
 
     const { data: user, isLoading, error} = useUserQuery(token);
 
-    // const [isLoading, setIsLoading] = useState(true);
     const { goToCustomize } = useNavigation();
     const { goToLibrary } = useNavigation();
     const { goToMailbox } = useNavigation();
 
     const navigate = useNavigate();
-    // const { user, setUser } = useContext(UserContext);
     const { room, setRoom } = useContext(RoomContext);
 
     const avatarRef = useRef(null);
@@ -58,15 +55,16 @@ const Home = () => {
     const libraryButtonRef = useRef(null);
     const objectRef = useRef(null);
 
+    console.log("📍 Home");
+
     const objects = () => {
         if (room) {
-            console.log('objects');
+            console.log('📍 objects');
             return room.objectPosition.map((object, index) => {
                 const { x, y, z, rotation } = object.defaultPosition;
                 const{ id, name, description } = object;
 
                 const handleClickObject = (event) => {
-                    // event.preventDefault();
                     event.stopPropagation();
                     console.log(`Clicked object: ${description}`);
                     navigate(`/${description}`);
@@ -80,7 +78,6 @@ const Home = () => {
                         ref={objectRef}
                         onClick={handleClickObject}
                     >
-                        {/* <p>{name}</p> */}
                         <button
                             class="object-button "
                             onClick = {() => console.log("달력 클릭")}
@@ -95,14 +92,13 @@ const Home = () => {
     }
 
     const handleNavigate = () => {
-        // navigate('/customize');
         goToCustomize(); // useNavigation Hook instead of useNavigate()
     }
-    // setShowClickComponent(true);
+
     const handleClick = (event) => {
         if (event.target.closest('.object-button')) {
             // 클릭한 대상이 버튼이면 movement-space의 동작 실행 안 함
-            // console.log("Button clicked, ignoring movement-space click.");
+
             event.stopPropagation();
             return;
         }
@@ -117,7 +113,6 @@ const Home = () => {
         const screenWidth = window.innerWidth;
         const threshold = screenWidth * 0.2; // 양 긑 20% 영역
 
-        // const maxMovement = Math.max(backgroundRect.width - screenWidth, 0); // 최대 이동 가능 거리
 
         const moveX = (backgroundSize.width - screenWidth) / 2;
         console.log(moveX);
@@ -129,7 +124,6 @@ const Home = () => {
             console.log('왼쪽');
             newBackgroundPosition -= 0.5; // 오른쪽으로 한 칸
             newMovementPosition += moveX;
-            // newBackgroundPosition = Math.min(backgroundPosition + screenWidth / 2, 0);
         }
         // 클릭 위치 오른쪽 끝 인점
         else if (event.clientX > screenWidth * 0.8 && backgroundPosition < 1) {

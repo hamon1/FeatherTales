@@ -55,17 +55,9 @@ const Login = () => {
                 }
             })
 
-            // await queryClient.prefetchQuery(['room', token], () => getRookData(token));
-            // alert(response.token);
-            // console.log(response);
-            // alert(response.data);
-            // const userData = UseFetchUserData(response.token);
-            // const userData = await getUserData(token);
-
             const roomData = await getRoomData(token);
             console.log('roomData successfully');
 
-            // setUser(userData);
             console.log(roomData);
             setRoom(roomData);
 
