@@ -247,36 +247,39 @@ const Library = () => {
                 </div>
                 <div class="tags-container">
                     <div class="category-box">
-                    {isVisibleAddCategory ? (
-                        <div class="add-category">
-                            <button
-                                onClick={()=> handleCategoryEdit(false)}
-                                >
-                                -
-                            </button>
-                            <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
-                            <button onClick={() => isValidCategory(newCategory)}>카테고리 추가</button>
-                        </div>
+                        {isVisibleAddCategory ? (
+                            <div class="add-category">
+                                <button
+                                    onClick={()=> handleCategoryEdit(false)}
+                                    >
+                                    -
+                                </button>
+                                <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}/>
+                                <button onClick={() => isValidCategory(newCategory)}>카테고리 추가</button>
+                            </div>
 
-                    ) :
-                    <></>
-                    }
-                    <div class="category-scroll">
-                        <button 
-                                className={selectedCategory === '' ? "categories-tag-selected" : "categories-tag"}
-                                onClick={() => setSelectedCategory('')}
-                            > 
-                            전체
-                        </button>
-                        {categoriesList(user.categories)}
-                    </div>
-                    <button
-                        onClick={() => handleCategoryEdit(true)}
-                        class="category-edit-button"
-                        >
-                        #
-                    </button>
-                    </div>
+                        ) :
+                        <></>
+                        }
+                        <div class="category-scroll">
+                            <button 
+                                    className={selectedCategory === '' ? "categories-tag-selected" : "categories-tag"}
+                                    onClick={() => setSelectedCategory('')}
+                                > 
+                                전체
+                            </button>
+                            {categoriesList(user.categories)}
+                        </div>
+                            </div>
+                        <div class="tooltip-container">
+                            <button
+                                onClick={() => handleCategoryEdit(true)}
+                                class="category-edit-button"
+                                >
+                                &#9998;
+                            </button>
+                            <span class="tooltip-text">태그 수정</span>
+                        </div>
                 </div>
             </div>
         </div>

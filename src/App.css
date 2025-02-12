@@ -641,25 +641,6 @@ img {
   color: #fff;
 }
 
-.category-edit-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  border-radius: 15px;
-  border: none;
-  background-color:cadetblue;
-  width: 24px;
-  height: 24px;
-  color: #000;
-  font-weight: bold;
-  font-size: 15px;
-
-  position: absolute;
-  bottom: 5px;
-  left: 20px;
-}
-
 .category-box {
   left: -14px;
   /* background-color: #712323; */
@@ -697,11 +678,14 @@ img {
   z-index: 20;
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 100vh;
   width: 80px;
   /* left: 0px; */
   overflow-y: auto;
   overflow-x: hidden;
+
+  background: linear-gradient(to right, #040404, rgba(0, 0, 0, 0));
+
 }
 .category-scroll::-webkit-scrollbar {
   display: none;
@@ -760,11 +744,12 @@ img {
   position: absolute;
   width: 20px;
   height: 20px;
-  /* top: 2px; */
-  /* right: 4px; */
+  top: 2px;
+  right: 4px;
   background: #712323;
   border-radius: 15px;
-  border: solid 2px #a54141;
+  /* border: solid 2px #a54141; */
+  border: none;
   color: #e4b3b3;
   font-size: 20px;
   text-align: center;
@@ -772,7 +757,73 @@ img {
   align-items: center;
   justify-content: center;
   right: 0px;
+
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+
+  
 }
+
+.tooltip-container {
+  position: relative;
+  /* display: inline-block; */
+  /* cursor: pointer; */
+  
+  width: 140px;
+  height: 40px;
+  
+  z-index: 10000;
+  /* background-color: #561818; */
+  
+  bottom: 50px;
+  /* left: -40px; */
+
+  justify-content: center;
+  align-items: center;
+}
+.category-edit-button {
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border-radius: 15px;
+  border: none;
+  background-color:rgb(145, 43, 43);
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 15px;
+
+  /* position: absolute; */
+  /* bottom: 5px;
+  left: 20px; */
+
+
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  /* background-color: #fff; */
+  color: white;
+  text-align: center;
+  padding: 8px;
+  /* border-radius: 4px; */
+  /* position: relative; */
+  /* left: 120%;  */
+  /* top: 50%; */
+  /* transform: translateY(-50%); */
+  /* white-space: nowrap; */
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  color: #a5c9e2;
+}
+
 /*Library End----------------------------------------------------------------*/
 /* DocView.js ----------------------------------------------------------------*/
 .docView-background {
