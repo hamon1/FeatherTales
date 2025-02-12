@@ -278,7 +278,7 @@ const Library = () => {
                                 >
                                 &#9998;
                             </button>
-                            <span class="tooltip-text">태그 수정</span>
+                            <span class="tooltip-text">카테고리 수정</span>
                         </div>
                 </div>
             </div>

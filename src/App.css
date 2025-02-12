@@ -804,7 +804,8 @@ img {
 .tooltip-container .tooltip-text {
   visibility: hidden;
   /* background-color: #fff; */
-  color: white;
+  color: rgba(256, 256, 256, 0.5);
+  font-size: 14px;
   text-align: center;
   padding: 8px;
   /* border-radius: 4px; */
@@ -821,7 +822,7 @@ img {
 .tooltip-container:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
-  color: #a5c9e2;
+  /* color: #a5c9e2; */
 }
 
 /*Library End----------------------------------------------------------------*/
