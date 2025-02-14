@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs, addCategory, getCategories } from '../api';
 import { useNavigation } from '../utils/navigate';
 import { UserContext } from '../contexts/UserContext';
@@ -52,6 +52,8 @@ const Library = () => {
     const [isFetchingDocs, setIsFetchingDocs] = useState(false);
     const [fetchError, setFetchError] = useState(null);
 
+    const [isDragging, setIsDragging] = useState(false);
+
     const { goToDocview } = useNavigation();
         
         console.log('📍library / token: ' + token);
@@ -60,6 +62,10 @@ const Library = () => {
         
         const [retryCount, setRetryCount] = useState(0);
         const maxRetries = 3;
+
+        useEffect(() => {
+            console.log("📍 dragging changed: " + isDragging);
+        }, [isDragging]);
         
         useEffect(() => {
             if (!token) {
@@ -87,22 +93,22 @@ const Library = () => {
             return;
         }
 
-
+        
         const fetchData = async () => {
             setIsFetchingDocs(true);
             setFetchError(null);
-
+            
             try {
                 const data_ = await getDocsFromCategory(token, selectedCategory);
                 console.log("📍 new data: ", data_.data);
-
+                
                 if (data_.data && Array.isArray(data_.data)) {
                     setFilteredDocs(data_.data);
                 } else {
                     console.error("❌ Invalid data format: ", data_);
                     setFilteredDocs([]);
                 }
-
+                
             } catch (error) {
                 console.error("❌ Error fetching data: ", error);
                 setFetchError(error);
@@ -111,28 +117,32 @@ const Library = () => {
                 setIsFetchingDocs(false);
             }
         };
-
+        
         fetchData();
         
         console.log("📍 fetched data(category): ", filteredDocs.length);
-
+        
     }, [selectedCategory, docs])
     
     useEffect(() => {
         const handleResize = () => {
             setIsTwoColumns(window.innerWidth > 1200); //768
         };
-
+        
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     },[]);
-
+    
     if (!docs) 
     return 
-        <Loading/>
+<Loading/>
 
-    const handleDeleteDoc = async (token, docId, refetch, setFilteredDocs) => {
-        try {
+const handleDraggingState = (state) => {
+    setIsDragging(state);
+};
+
+const handleDeleteDoc = async (token, docId, refetch, setFilteredDocs) => {
+    try {
             deleteDoc(token, docId);
     
             console.log("✅ 삭제 완료");
@@ -238,15 +248,13 @@ const Library = () => {
                         <p>문서를 불러오는 중 오류 발생: {error}</p>
                     ) : filteredDocs.length > 0 ? (
                         filteredDocs.map(doc => (
-                            <Doclist_section key={doc._id} data={doc} onDelete={() => handleDeleteDoc(token, doc._id, refetch, setFilteredDocs)} refetch={refetch}/>
+                            <Doclist_section key={doc._id} data={doc} onDelete={() => handleDeleteDoc(token, doc._id, refetch, setFilteredDocs)} refetch={refetch} handleDraggingState={handleDraggingState}/>
                         ))
                     ) : (
                         <p>No documents yet</p>
                     )}
 
                 </div>
-                <div class="tags-container">
-                    <div class="category-box">
                         {isVisibleAddCategory ? (
                             <div class="add-category">
                                 <button
@@ -261,6 +269,11 @@ const Library = () => {
                         ) :
                         <></>
                         }
+                <div class="tags-container">
+                    {/* <div class="category-box"> */}
+                    <div 
+                        className={`category-box ${isDragging ? "hovered" : ""}`} 
+                    >
                         <div class="category-scroll">
                             <button 
                                     className={selectedCategory === '' ? "categories-tag-selected" : "categories-tag"}

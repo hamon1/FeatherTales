@@ -20,7 +20,7 @@ const Docview = () => {
 
     const {docId} = useParams();
 
-    const { goToHome, goToLibrary } = useNavigation();
+    const { goToLogin, goToHome, goToLibrary } = useNavigation();
     
     const { data: user, isLoading, error} = useUserQuery(token);
 
@@ -37,6 +37,13 @@ const Docview = () => {
 
 
     console.log("📍 Docview: ", token);
+
+    useEffect(() => {
+        if (!token) {
+            goToLogin();
+            return;
+        }
+    })
 
     useEffect(() => {
         if(user) {
