@@ -37,7 +37,7 @@ const CustomDragLayer = () => {
     )
 }
 
-const Doclist_section = ({key, data, onDelete}) => {
+const Doclist_section = ({key, data, onDelete, refetch, handleDraggingState}) => {
     const [isDraggable, setIsDraggable] = useState(false);
     const [position, setPosition] = useState({x: -100, y: -100});
 
@@ -54,28 +54,7 @@ const Doclist_section = ({key, data, onDelete}) => {
         canDrag: () => isDraggable,
     })
 
-    // useEffect(() => {
-    //     console.log('useEffect[drag]: ', isDraggable, position.x);
-    //     const updateMousePosition = (event) => {
-    //         console.log('updateMousePosition', position.x);
-    //         // setPosition({x: event.clientX, y: event.clientY});
-    //         if (isDraggable) {
-    //             setPosition({ x: event.clientX, y: event.clientY });
-    //         }
-    //     };
-    //     // if (isDraggable) {
-    //         // 드래그 가능 상태일 때 이벤트 리스너 추가
-    //         window.addEventListener('mousemove', updateMousePosition);
-    //     // } else {
-    //         // 드래그 가능 상태가 아닐 때 기존 리스너 제거
-    //         // window.removeEventListener('mousemove', updateMousePosition);
-    //     // }
-    
-    //     // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    //     return () => {
-    //         window.removeEventListener('mousemove', updateMousePosition);
-    //     };
-    // },[isDraggable])
+    console.log("📍 doclist section ");
 
     
     const handleMouseDown = (event) => {
@@ -85,20 +64,15 @@ const Doclist_section = ({key, data, onDelete}) => {
         timeOutRef.current = setTimeout(() => {
             setIsDraggable(true);
             console.log('isDraggable: ', isDraggable);
+            handleDraggingState(true);
         }, 500);
     }
-
-    // const handleMouseMove = (event) => {
-    //     // if (!isDraggable) return;
-    //     console.log('handleMouseMove');
-
-    //     setPosition({ x: event.clientX, y: event.clientY });
-    // }
 
     const handleMouseUp = () => {
         console.log('handleMouseUp');
         clearTimeout(timeOutRef.current);
         setIsDraggable(false);
+        handleDraggingState(false);
     }
     
     dragRef(ref);
@@ -110,16 +84,6 @@ const Doclist_section = ({key, data, onDelete}) => {
     }
 
     const handleDelete = () => {
-        
-        // const confirmed = window.confirm('Are you sure you want to delete');
-
-        // if (confirmed) {
-        //     console.log('handleDelete');
-        //     onDelete();
-        // }
-        // else {
-        //     return;
-        // }
 
         Swal.fire({
             title: '정말 삭제하시겠습니까?',
@@ -135,24 +99,16 @@ const Doclist_section = ({key, data, onDelete}) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 onDelete();
+
+                alert("삭제 완료");
+
+                console.log("✅ deteted and refetched");
             } else if (result.isCancelled) {
                 console.log('Delete canceled');
             }
         });
 
     }
-
-
-    // const handleDelete = async (docId) => {
-    //     try {
-    //         const token = sessionStorage.getItem('token');
-
-    //         await deleteDoc(token, docId);
-    //         console.log('Document deleted!');
-    //     } catch (error) {
-    //         console.error('Failed to delete document', error.response.data.msg);
-    //     }
-    // }
 
     return (
         <>
