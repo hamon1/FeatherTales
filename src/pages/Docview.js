@@ -42,7 +42,7 @@ const Docview = () => {
             goToLogin();
             return;
         }
-    })
+    }, [])
 
     useEffect(() => {
         if(user) {
