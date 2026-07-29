@@ -1,438 +1,356 @@
-import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { UserContext } from '../contexts/UserContext';
-import { RoomContext } from '../contexts/RoomContext';
-import '../App.css';
-
-import { useUserQuery } from '../hooks/useUserQuery';
-
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { RoomContext } from '../contexts/RoomContext';
+import { useUserQuery } from '../hooks/useUserQuery';
 import { useNavigation } from '../utils/navigate';
 
 import LoadingPage from './LoadingPage';
 import Mailbox from './Mailbox';
 
-const Home = () => { 
+import '../App.css';
+
+const Home = () => {
     const token = sessionStorage.getItem('token');
-    console.log('home token', token);
-
-    const { data: user, isLoading, error} = useUserQuery(token);
-
-    const { goToCustomize } = useNavigation();
-    const { goToLibrary } = useNavigation();
-    const { goToMailbox } = useNavigation();
-
     const navigate = useNavigate();
+    const { goToCustomize, goToLibrary, goToMailbox } = useNavigation();
     const { room, setRoom } = useContext(RoomContext);
 
-    const avatarRef = useRef(null);
-    const petRef = useRef(null);
-    const clickRef = useRef(null);
+    // ─── 서버 상태 ────────────────────────────────────────────────────────────
+    const { data: user, isLoading, error } = useUserQuery(token);
 
+    // ─── Refs ─────────────────────────────────────────────────────────────────
+    const avatarRef            = useRef(null);
+    const petRef               = useRef(null);
+    const clickRef             = useRef(null);
+    const backgroundRef        = useRef(null);
+    const objectRef            = useRef(null);
+    const objectMainDoorRef    = useRef(null);
+    const objectLibraryDoorRef = useRef(null);
+    const mainDoorButtonRef    = useRef(null);
+    const libraryButtonRef     = useRef(null);
+
+    // ─── State ────────────────────────────────────────────────────────────────
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
-    
-    const [position, setPosition] = useState({ x: centerX, y: centerY });
-    const [clickPosition, setClickPosition] = useState({ x: -1000, y:  -1000});
+
+    // 아바타 위치 (배경 기준 좌표)
+    const [position, setPosition]           = useState({ x: centerX, y: centerY });
+    // 클릭 이펙트 위치
+    const [clickPosition, setClickPosition] = useState({ x: -1000, y: -1000 });
     const [showClickComponent, setShowClickComponent] = useState(true);
 
-    const objectMainDoorRef = useRef(null);
-    const [positionMainDoor, setPositionMainDoor] = useState({ x: 50, y: 50 });
-    const [ShowMainDoorButton, setShowMainDoorButton] = useState(false);
-
-    const objectLibraryDoorRef = useRef(null);
-    const [positionLibraryDoor, setPositionLibraryDoor] = useState({ x: 50, y: 50 });
+    // 도어 오브젝트 상태
+    const [positionMainDoor, setPositionMainDoor]           = useState({ x: 50, y: 50 });
+    const [positionLibraryDoor, setPositionLibraryDoor]     = useState({ x: 50, y: 50 });
+    const [ShowMainDoorButton, setShowMainDoorButton]       = useState(false);
     const [ShowLibraryDoorButton, setShowLibraryDoorButton] = useState(false);
-    
+
+    // 우편함 모달
     const [isMailboxVisible, setIsMailbaxVisible] = useState(false);
 
-    const [backgroundPosition, setBackgroundPosition] = useState(0.5); // (0, 1)
-    const backgroundRef = useRef(null);
-    const [ backgroundSize, setBackgroundSize ] = useState();
+    // 배경 스크롤 위치 (0~1 범위, 0.5가 중앙)
+    const [backgroundPosition, setBackgroundPosition] = useState(0.5);
+    const [backgroundSize, setBackgroundSize]         = useState();
+    const [movementPosition, setMovementPosition]     = useState(0);
 
-    const [ movementPosition, setMovementPosition] = useState(0);
+    // ─── Effects ──────────────────────────────────────────────────────────────
 
-    const mainDoorButtonRef = useRef(null);
-    const libraryButtonRef = useRef(null);
-    const objectRef = useRef(null);
+    // 배경 크기 계산 및 리사이즈 대응 (1920:1080 비율 유지)
+    useEffect(() => {
+        const calculateBackgroundSize = () => {
+            const height = window.innerHeight;
+            const width  = height * (1920 / 1080);
+            if (backgroundRef.current) {
+                backgroundRef.current.style.width  = `${width}px`;
+                backgroundRef.current.style.height = `${height}px`;
+            }
+            setBackgroundSize({ height, width });
+        };
 
-    console.log("📍 Home");
+        calculateBackgroundSize();
+        window.addEventListener('resize', calculateBackgroundSize);
+        return () => window.removeEventListener('resize', calculateBackgroundSize);
+    }, []);
 
-    const objects = () => {
-        if (room) {
-            console.log('📍 objects');
-            return room.objectPosition.map((object, index) => {
-                const { x, y, z, rotation } = object.defaultPosition;
-                const{ id, name, description } = object;
-
-                const handleClickObject = (event) => {
-                    event.stopPropagation();
-                    console.log(`Clicked object: ${description}`);
-                    navigate(`/${description}`);
-                }
-
-                return (
-                    <div
-                        key={index}
-                        className={`object ${name}`}
-                        style={{ left: x, top: y }}
-                        ref={objectRef}
-                        onClick={handleClickObject}
-                    >
-                        <button
-                            class="object-button "
-                            onClick = {() => console.log("달력 클릭")}
-                        >
-                            {name}
-                        </button>
-                        {/* <img src={`/images/${type}.png`} alt={type} /> */}
-                    </div>
-                );
-            });
+    // 배경 크기가 확정되면 배경을 화면 중앙 기준으로 초기 배치
+    useEffect(() => {
+        const screenWidth = window.innerWidth;
+        if (backgroundSize) {
+            setMovementPosition(-(backgroundSize.width - screenWidth) / 2);
+            setBackgroundPosition(0.5);
         }
-    }
+    }, [backgroundSize]);
+
+    useEffect(() => {
+        if (clickPosition.x !== -1000 && clickPosition.y !== -1000) {
+            console.log("Updated click position:", clickPosition);
+        }
+    }, [clickPosition]);
+
+    useEffect(() => {
+        if (user && room) {
+            console.log('roomdata: ', room);
+        }
+    }, [user, room]);
+
+    // 아바타 위치 변경 시 펫 위치 동기화 (현재 미구현)
+    useEffect(() => {
+        if (avatarRef.current && petRef.current) {
+            // TODO: petRef 위치 동기화
+        }
+    }, [position]);
+
+    // 100ms 간격으로 충돌 감지 (도어 근접 여부 확인)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkCollision();
+        }, 100);
+
+        return () => {
+            handleObjectShowFalse();
+            clearInterval(interval);
+        };
+    }, [position]);
+
+    // ─── Handlers ─────────────────────────────────────────────────────────────
 
     const handleNavigate = () => {
-        goToCustomize(); // useNavigation Hook instead of useNavigate()
-    }
+        goToCustomize();
+    };
 
+    // 클릭 위치로 아바타 이동 + 양 끝 20% 영역 클릭 시 배경 스크롤
     const handleClick = (event) => {
         if (event.target.closest('.object-button')) {
-            // 클릭한 대상이 버튼이면 movement-space의 동작 실행 안 함
-
             event.stopPropagation();
             return;
         }
-
         if (!backgroundRef.current) return;
 
         const backgroundRect = backgroundRef.current.getBoundingClientRect();
-
-        const clickx = event.clientX - backgroundRect.left; // 배경 위치 (배경 기준 좌표)
+        const clickx = event.clientX - backgroundRect.left;
         const clicky = event.clientY - backgroundRect.top;
 
         const screenWidth = window.innerWidth;
-        const threshold = screenWidth * 0.2; // 양 긑 20% 영역
+        const threshold   = screenWidth * 0.2;
+        const moveX       = (backgroundSize.width - screenWidth) / 2;
 
-
-        const moveX = (backgroundSize.width - screenWidth) / 2;
-        console.log(moveX);
         let newBackgroundPosition = backgroundPosition;
-        let newMovementPosition = movementPosition;
-        console.log("좌표?", event.clientX, threshold, screenWidth * 0.8);
-        // 클릭 위치 왼쪽 끝 인접
+        let newMovementPosition   = movementPosition;
+
         if (event.clientX < threshold && backgroundPosition > 0) {
-            console.log('왼쪽');
-            newBackgroundPosition -= 0.5; // 오른쪽으로 한 칸
-            newMovementPosition += moveX;
-        }
-        // 클릭 위치 오른쪽 끝 인점
-        else if (event.clientX > screenWidth * 0.8 && backgroundPosition < 1) {
-            console.log('오른쪽');
-            newBackgroundPosition += 0.5; // 왼쪽으로 한 칸
-            newMovementPosition -= moveX;
-            // newBackgroundPosition = Math.max(backgroundPosition - screenWidth / 2, -maxMovement);
+            newBackgroundPosition -= 0.5;
+            newMovementPosition   += moveX;
+        } else if (event.clientX > screenWidth * 0.8 && backgroundPosition < 1) {
+            newBackgroundPosition += 0.5;
+            newMovementPosition   -= moveX;
         }
 
         setMovementPosition(newMovementPosition);
         setBackgroundPosition(newBackgroundPosition);
 
-        const avatarWidth = avatarRef.current ? avatarRef.current.offsetWidth : 0;
+        const avatarWidth  = avatarRef.current ? avatarRef.current.offsetWidth  : 0;
         const avatarHeight = avatarRef.current ? avatarRef.current.offsetHeight : 0;
         setPosition({
-            x: clickx - avatarWidth/2,
+            x: clickx - avatarWidth  / 2,
             y: clicky - avatarHeight,
-        })
+        });
 
-        const container = event.currentTarget.getBoundingClientRect();
-        
-        const x = event.clientX;
-        const y = event.clientY - container.top;
-        
-        // setPosition({ x: x - avatarWidth/2, y: y - avatarHeight });
-
-        console.log("너비", backgroundRect.width);
-        console.log(backgroundSize);
-        setClickPosition({ x: clickx, y: clicky })
-        console.log(x, y);
-        console.log(clickPosition.x, clickPosition.y);
-
-        setShowClickComponent(true); // 클릭 효과 표시
-
-        // 0.5초 후 클릭 효과 제거 (애니메이션 시간과 맞춤)
+        setClickPosition({ x: clickx, y: clicky });
+        setShowClickComponent(true);
         setTimeout(() => setShowClickComponent(false), 500);
-
-
     };
+
     const handleMainDoorClick = (event) => {
-        // event.preventDefault();
         event.stopPropagation();
         alert('나가?');
     };
+
     const handleMailboxClick = (event) => {
-        // event.preventDefault();
         event.stopPropagation();
         setIsMailbaxVisible(true);
     };
-    const handleLibaryClick = (event) => {
-        // event.preventDefault();
-        event.stopPropagation();
 
+    const handleLibaryClick = (event) => {
+        event.stopPropagation();
         goToLibrary();
-    }
-    
+    };
+
     const handleAvatarClick = () => {
         alert('Avatar clicked');
-    }
+    };
+
     const handlePetClick = (event) => {
         event.stopPropagation();
         alert('안녕!');
-    }
-    
+    };
+
+    // 아바타가 도어 오브젝트와 겹쳤을 때 해당 버튼 노출
     const handleOverlap = (target) => {
-        console.log('오브젝트 겹침', target);
         switch (target) {
-            case 'maindoor': {
+            case 'maindoor':
                 setShowMainDoorButton(true);
-                // document.getElementById('mainDoor-button').style.visibility = 'visible';
-                // mainDoorButtonRef.current.style.visibility = 'visible';
                 return;
-            }
-            case 'librarydoor': {
+            case 'librarydoor':
                 setShowLibraryDoorButton(true);
-                // document.getElementById('library-button').style.visibility = 'visible';
-                // libraryButtonRef.current.style.visibility = 'visible';
                 return;
-            }
-            defalut: {
+            default:
                 return;
-            }
         }
-    }
-    
+    };
+
+    // 아바타가 도어에서 멀어지면 버튼 숨김
     const handleObjectShowFalse = () => {
         setShowMainDoorButton(false);
         setShowLibraryDoorButton(false);
-        // document.getElementById('mainDoor-button').style.visibility = 'hidden';
-        // document.getElementById('library-button').style.visibility = 'hidden';
-        // mainDoorButtonRef.current.style.visibility = 'hidden';
-        // libraryButtonRef.current.style.visibility = 'hidden';
-        
-    }
-    
+    };
+
+    // AABB 충돌 감지: 아바타와 각 도어의 bounding box 비교
     const checkCollision = () => {
-        if (!avatarRef.current) {
-            return;
-        }
+        if (!avatarRef.current) return;
 
         const objAvatar = avatarRef.current.getBoundingClientRect();
+        const objDoor   = objectMainDoorRef.current.getBoundingClientRect();
+        const objDoor2  = objectLibraryDoorRef.current.getBoundingClientRect();
 
-        const objDoor = objectMainDoorRef.current.getBoundingClientRect();
-        const objDoor2 = objectLibraryDoorRef.current.getBoundingClientRect();
-        
         if (
-            objAvatar.left < objDoor.right &&
-            objAvatar.right > objDoor.left &&
-            objAvatar.top < objDoor.bottom &&
+            objAvatar.left   < objDoor.right  &&
+            objAvatar.right  > objDoor.left   &&
+            objAvatar.top    < objDoor.bottom &&
             objAvatar.bottom > objDoor.top
         ) {
             handleOverlap('maindoor');
         }
+
         if (
-            objAvatar.left < objDoor2.right &&
-            objAvatar.right > objDoor2.left &&
-            objAvatar.top < objDoor2.bottom &&
+            objAvatar.left   < objDoor2.right  &&
+            objAvatar.right  > objDoor2.left   &&
+            objAvatar.top    < objDoor2.bottom &&
             objAvatar.bottom > objDoor2.top
         ) {
             handleOverlap('librarydoor');
         }
-        };
+    };
 
-        const libraryButton = useCallback(() => {
-            console.log('library button clicked');
-        }, []);
+    // ─── Render Helpers ───────────────────────────────────────────────────────
 
-        useEffect(() => {
-            const screenWidth = window.innerWidth;
+    // room 데이터의 objectPosition을 기반으로 인터랙션 오브젝트 렌더링
+    const objects = () => {
+        if (!room) return null;
 
-            if (backgroundSize) {
-                setMovementPosition(-(backgroundSize.width - screenWidth)/2);
-                setBackgroundPosition(0.5);
-            }
+        return room.objectPosition.map((object, index) => {
+            const { x, y } = object.defaultPosition;
+            const { name, description } = object;
 
-        }, [backgroundSize])
-        
-        useEffect(() => {
-            const calculateBackgroundSize = () => {
-                const height = window.innerHeight;
-                const width = height * ( 1920 / 1080 );
-                console.log('너비 업데이트', width);
-                if (backgroundRef.current) {
-                    backgroundRef.current.style.width = `${width}px`;
-                    backgroundRef.current.style.height = `${height}px`;
-                }
-                setBackgroundSize({ height: height, width: width });
+            const handleClickObject = (event) => {
+                event.stopPropagation();
+                navigate(`/${description}`);
             };
-            calculateBackgroundSize();
-        
-            window.addEventListener('resize', calculateBackgroundSize);
 
-            return () => {
-                window.removeEventListener('resize', calculateBackgroundSize);
-            };
-        }, []);
+            return (
+                <div
+                    key={index}
+                    className={`object ${name}`}
+                    style={{ left: x, top: y }}
+                    ref={objectRef}
+                    onClick={handleClickObject}
+                >
+                    <button className="object-button" onClick={() => console.log("달력 클릭")}>
+                        {name}
+                    </button>
+                </div>
+            );
+        });
+    };
 
-        useEffect(() => {
-            if (clickPosition.x !== -1000 && clickPosition.y !== -1000) {
-                console.log("Updated click position:", clickPosition);
-            }
+    // ─── Render ───────────────────────────────────────────────────────────────
 
-        }, [clickPosition]);
-        
-        useEffect(() => {
-            if (user && room) {
-                // setIsLoading(false);
-                console.log('roomdata: ', room);
-            } else {
-                // setIsLoading(true);
-            }
-        }, [user, room])
-
-        useEffect(() => {
-            if (avatarRef.current) {
-                const avatarRect = avatarRef.current.getBoundingClientRect();
-                if (petRef.current) {
-                    // petRef.current.style.left = `${avatarRect.left + 20}px`;
-                    // petRef.current.style.top = `${avatarRect.top + 20}px`;
-                }
-            }
-        }, [position])
-        
-        useEffect(() => {
-            //최적화?
-            const interval = setInterval(() => {
-                checkCollision();
-            }, 100);
-
-            return () => {
-                handleObjectShowFalse();
-                clearInterval(interval)
-            };
-        }, [position])
-        
-
-        return (
-            <>
+    return (
+        <>
             {isLoading || !user ? (
-                <LoadingPage isLoading={isLoading}/>
-            ):
-            <>
-                <div>
-                <div 
-                class="room-space" 
-                style={{ 
-                    backgroundPosition: `${(backgroundPosition ) * 100}% 0`, 
-                    // transform: `translateX(${backgr/oundPosition * 100}%)`, // 모든 요소에 동일한 이동 적용
-                    // transition: "transform 0.5s ease", // 부드러운 이동
-
-                }}>
-                    <div 
-                        ref={backgroundRef} 
-                        class="movement-space" 
-                        onClick={handleClick}
-                        onClickCapture={() => console.log('moving')}
-                        style = {{
-                            // width: `${backgroundSize.width}px`,
-                            transform: `translateX(${movementPosition}px)`, // X축으로 이동
-                            // backgroundPosition: `${backgroundPosition * 100}% 0`, 
-                            
-                        }}
-                    >
-                                <div class="main object-door" ref={objectMainDoorRef}>
-                                    <div class="door">
-                                    </div>
+                <LoadingPage isLoading={isLoading} />
+            ) : (
+                <>
+                    <div>
+                        <div
+                            className="room-space"
+                            style={{ backgroundPosition: `${backgroundPosition * 100}% 0` }}
+                        >
+                            <div
+                                ref={backgroundRef}
+                                className="movement-space"
+                                onClick={handleClick}
+                                onClickCapture={() => console.log('moving')}
+                                style={{ transform: `translateX(${movementPosition}px)` }}
+                            >
+                                {/* 현관문 영역 */}
+                                <div className="main object-door" ref={objectMainDoorRef}>
+                                    <div className="door" />
                                 </div>
-                                {ShowMainDoorButton ? (
+                                {ShowMainDoorButton && (
                                     <>
-                                        <button ref = {mainDoorButtonRef} class="main object-button" id="mainDoor-button" onClick={handleMainDoorClick}>현관문</button>
-                                        <button 
-                                            ref = {mainDoorButtonRef}
-                                            class="mailboxButton object-button" 
-                                            id = "mainDoor-button"
-                                            onClick={handleMailboxClick}
-                                        >
-                                            우체통 
+                                        <button ref={mainDoorButtonRef} className="main object-button" id="mainDoor-button" onClick={handleMainDoorClick}>
+                                            현관문
+                                        </button>
+                                        <button ref={mainDoorButtonRef} className="mailboxButton object-button" id="mainDoor-button" onClick={handleMailboxClick}>
+                                            우체통
                                         </button>
                                     </>
-                                ) :
-                                <div> </div>
-                            }
-                                <div class="library object-door" ref={objectLibraryDoorRef}>
-                                    <div class="door">
+                                )}
+
+                                {/* 서재 문 영역 */}
+                                <div className="library object-door" ref={objectLibraryDoorRef}>
+                                    <div className="door" />
+                                </div>
+                                {ShowLibraryDoorButton && (
+                                    <button ref={libraryButtonRef} className="library object-button" id="library-button" onClick={handleLibaryClick}>
+                                        책방 이동하기
+                                    </button>
+                                )}
+
+                                {objects()}
+
+                                {/* 아바타 & 펫 */}
+                                <div className="avatar-box">
+                                    <div
+                                        className="avatar"
+                                        ref={avatarRef}
+                                        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+                                        onClick={handleAvatarClick}
+                                    >
+                                        <p>{user.username}</p>
                                     </div>
+                                    <div
+                                        ref={petRef}
+                                        className="pet-element"
+                                        style={{ transform: `translate(${position.x + 180}px, ${position.y + 200}px)` }}
+                                        onClick={handlePetClick}
+                                    />
+                                    {showClickComponent && (
+                                        <div
+                                            className="click-component"
+                                            ref={clickRef}
+                                            style={{
+                                                top:  clickPosition.y - 50,
+                                                left: clickPosition.x - 50,
+                                            }}
+                                        />
+                                    )}
                                 </div>
-                                {ShowLibraryDoorButton ? (
-                                    <button 
-                                    ref = {libraryButtonRef}
-                                    class="library object-button" 
-                                    id = "library-button"
-                                    onClick={handleLibaryClick}>책방 이동하기</button>
-                                ) :
-                                <div> </div>
-                            }
-                            {objects()}
-                        <div class="avatar-box">
-                            <div 
-                                class="avatar"
-                                ref={avatarRef}
-                                style={{
-                                    transform: `translate(${position.x}px, ${position.y}px)`,
-                                }}
-                                onClick={handleAvatarClick}
-                                >
-                                {/* <p>avartar</p> */}
-                                <p>{user.username}</p>
                             </div>
-                            <div
-                                ref={petRef}
-                                class="pet-element"
-                                style={{
-                                    transform: `translate(${position.x + 180}px, ${position.y + 200}px)`,
-                                }}
-                                onClick={handlePetClick}
-                            >
-                                {/* <img src="../assets/Pet.png"/> */}
-                            </div>
-                            {showClickComponent && (
-                                <div 
-                                class="click-component"
-                                ref={clickRef}
-                                // style={{
-                                //     transform: `translate(${clickPosition.x}px, ${clickPosition.y}px)`,
-                                // }}
-                                style={{
-                                    top: clickPosition.y - 50, // 클릭 위치 중앙에 배치
-                                    left: clickPosition.x - 50,
-                                }}
-                                >
-                                    
-                                </div>
-                                
-                            )} 
                         </div>
                     </div>
-                </div>
-            </div>
-            {isMailboxVisible ? (
-                <div class="modal-overlay" onClick={()=> setIsMailbaxVisible(false)}>
-                    <Mailbox />
-                </div>
-            ):
-        <></>
-    }
-    </>
-            }
+
+                    {/* 우편함 모달 */}
+                    {isMailboxVisible && (
+                        <div className="modal-overlay" onClick={() => setIsMailbaxVisible(false)}>
+                            <Mailbox />
+                        </div>
+                    )}
+                </>
+            )}
         </>
-    )
-}
+    );
+};
 
 export default Home;
