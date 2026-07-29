@@ -1,102 +1,62 @@
-import { useState, useEffect} from 'react';
-
-import { useNavigate } from 'react-router-dom';
-
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { getUserData, updateUserData, addCategory, deleteCategory } from '../api';
 
-export const useUserQuery = (token) => { 
-    console.log('?', token);
+// ─── 사용자 데이터 조회 ────────────────────────────────────────────────────────
 
-    // const navigate = useNavigate();
-    // useEffect(() => {
-    //     if(!token) {
-    //         navigate('/login'); 
-    //         return;
-    //     }
-    // }, [token, navigate]);
+export const useUserQuery = (token) => {
+    return useQuery({
+        queryKey: ['user'],
+        queryFn: async () => {
+            const data = await getUserData(token);
+            return data;
+        },
+        enabled: !!token,
+    });
+};
 
-    return useQuery({ 
-        queryKey: ['user'], 
-        queryFn: 
-        async () => {
-        const  data  = await getUserData(token);
-        console.log('user query', data, token);
-        return data;
-},
-enabled: !!token,
-})
-}
+// ─── 아바타/닉네임 수정 ────────────────────────────────────────────────────────
 
 export const useUserUpdateMutation = (token) => {
-    // const [token, setToken] = useState(sessionStorage.getItem('token'));
-
-    // useEffect(() => {
-    //     const storedToken = sessionStorage.getItem('token');
-    //     setToken(storedToken); // 업데이트된 token 설정
-    // }, []); // 한 번 실행
-
     const queryClient = useQueryClient();
-    return useMutation({ 
-        mutationFn: 
-        async (updateUser) => {
-            console.log("user update");
+    return useMutation({
+        mutationFn: async (updateUser) => {
             const { data } = await updateUserData(token, updateUser);
-            console.log(data);
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries( ['user'] );
+            queryClient.invalidateQueries(['user']);
         },
-        
     });
-};   
+};
+
+// ─── 카테고리 추가 ─────────────────────────────────────────────────────────────
 
 export const useCategoriseUpdateMutation = (token) => {
-    // const [token, setToken] = useState(sessionStorage.getItem('token'));
-
-    // useEffect(() => {
-    //     const storedToken = sessionStorage.getItem('token');
-    //     setToken(storedToken); // 업데이트된 token 설정
-    // }, []); // 한 번 실행
-
     const queryClient = useQueryClient();
-    return useMutation({ 
-        mutationFn: 
-        async (updateCategory) => {
-            console.log("category update");
+    return useMutation({
+        mutationFn: async (updateCategory) => {
             const { data } = await addCategory(token, updateCategory);
-            console.log(data);
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries( ['user'] );
+            queryClient.invalidateQueries(['user']);
         },
-        
     });
-};   
+};
+
+// ─── 카테고리 삭제 ─────────────────────────────────────────────────────────────
 
 export const useCategoriseDeleteMutation = () => {
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
-
-    // useEffect(() => {
-    //     const storedToken = sessionStorage.getItem('token');
-    //     setToken(storedToken); // 업데이트된 token 설정
-    // }, []); // 한 번 실행
-
+    const [token] = useState(sessionStorage.getItem('token'));
     const queryClient = useQueryClient();
-    return useMutation({ 
-        mutationFn: 
-        async (categoryId) => {
-            console.log("category update");
+    return useMutation({
+        mutationFn: async (categoryId) => {
             const { data } = await deleteCategory(token, categoryId);
-            console.log(data);
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries( ['user'] );
+            queryClient.invalidateQueries(['user']);
         },
-        
     });
-};   
+};

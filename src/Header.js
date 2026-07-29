@@ -1,23 +1,25 @@
 import React, { useContext } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+
 import { UserContext } from './contexts/UserContext';
 import { useNavigation } from "./utils/navigate";
+
+import profileImage  from './assets/profile.png';
+import homeImage     from './assets/Home.png';
+import customizeImage from './assets/Custom.png';
+import logoutImage   from './assets/Logout.png';
+
 import './App.css';
 
-import profileImage from './assets/profile.png';
-import homeImage from './assets/Home.png';
-import customizeImage from './assets/Custom.png';
-import logoutImage from './assets/Logout.png';
-
+// 로그인 여부에 따라 네비게이션 항목을 다르게 렌더링
 export const Header = () => {
     const { user, logout } = useContext(UserContext);
-
     const { goToMain } = useNavigation();
 
-    const handleLoout = () => {
+    const handleLogout = () => {
         logout();
         goToMain();
-    }
+    };
 
     return (
         <header>
@@ -25,38 +27,31 @@ export const Header = () => {
                 <ul>
                     {user ? (
                         <>
-                            <li data-hover="홈"><Link to="/home">
-                                <img 
-                                class="home"
-                                src={homeImage}
-                                />
-                                </Link></li>
-                            <li  data-hover="로그아웃"><button onClick={handleLoout}>
-                                <img 
-                                class="logout"
-                                src={logoutImage}
-                                />
-                                </button></li>
-                            <li data-hover="커스텀"><Link to="/customize">
-                                    <img
-                                    class="customize"
-                                    src={customizeImage}
-                                    />
-                                </Link></li>
-                            <li data-hover="책방"><Link to="/library">
-                                <img 
-                                class="library" 
-                                src={profileImage}
-                                alt="Profile"
-                                />
-                                </Link></li>
-                            <li data-hover="프로필"><Link to="/profile">
-                                <img 
-                                class="profile" 
-                                src={profileImage}
-                                alt="Profile"
-                                />
-                                </Link></li>
+                            <li data-hover="홈">
+                                <Link to="/home">
+                                    <img className="home" src={homeImage} />
+                                </Link>
+                            </li>
+                            <li data-hover="로그아웃">
+                                <button onClick={handleLogout}>
+                                    <img className="logout" src={logoutImage} />
+                                </button>
+                            </li>
+                            <li data-hover="커스텀">
+                                <Link to="/customize">
+                                    <img className="customize" src={customizeImage} />
+                                </Link>
+                            </li>
+                            <li data-hover="책방">
+                                <Link to="/library">
+                                    <img className="library" src={profileImage} alt="Library" />
+                                </Link>
+                            </li>
+                            <li data-hover="프로필">
+                                <Link to="/profile">
+                                    <img className="profile" src={profileImage} alt="Profile" />
+                                </Link>
+                            </li>
                         </>
                     ) : (
                         <>
@@ -67,5 +62,5 @@ export const Header = () => {
                 </ul>
             </nav>
         </header>
-    )
-}
+    );
+};

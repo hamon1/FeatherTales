@@ -1,11 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+// ─── Context Providers ────────────────────────────────────────────────────────
 import { UserProvider } from './contexts/UserContext';
 import { DocsProvider } from './contexts/DocContext';
 import { RoomProvider } from './contexts/RoomContext';
+
+// ─── 외부 라이브러리 ───────────────────────────────────────────────────────────
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
+// ─── 페이지 컴포넌트 ───────────────────────────────────────────────────────────
 import Main from './pages/main';
 import Login from './Login';
 import Register from './Register';
@@ -19,6 +24,8 @@ import Calendar from './pages/Calendar';
 
 import { Header } from './Header';
 
+// DndProvider > UserProvider > RoomProvider > DocsProvider 순서로 중첩
+// DndProvider가 최상위에 있어야 자식 컴포넌트에서 드래그 앤 드롭 사용 가능
 function App() {
   return (
     <DndProvider backend={HTML5Backend}>

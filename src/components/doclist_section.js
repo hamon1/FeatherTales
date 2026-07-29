@@ -1,19 +1,17 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useDrag, useDrop, useDragLayer } from 'react-dnd';
+import Swal from 'sweetalert2';
+
 import { useNavigation } from '../utils/navigate';
 
-import Swal from "sweetalert2";
-
-import { useDrag, useDrop, useDragLayer } from 'react-dnd';
-
+// 드래그 중일 때 마우스 위치에 따라 따라다니는 레이어
 const CustomDragLayer = () => {
     const { isDragging, currentOffset } = useDragLayer((monitor) => ({
         isDragging: monitor.isDragging(),
         currentOffset: monitor.getSourceClientOffset(),
     }));
 
-    if (!isDragging || !currentOffset) {
-        return null;
-    }
+    if (!isDragging || !currentOffset) return null;
 
     return (
         <div
@@ -22,7 +20,7 @@ const CustomDragLayer = () => {
                 pointerEvents: 'none',
                 left: currentOffset.x,
                 top: currentOffset.y,
-                transform: 'translate(-50%, -50%)', // 드래그 아이템을 마우스 중앙에 위치
+                transform: 'translate(-50%, -50%)',
                 zIndex: 1000,
                 backgroundColor: 'rgba(0,0,0,0.8)',
                 color: 'white',
@@ -32,57 +30,53 @@ const CustomDragLayer = () => {
         >
             드래그 중...
         </div>
-    )
-}
+    );
+};
 
-const Doclist_section = ({key, data, onDelete, refetch, handleDraggingState}) => {
-    const [isDraggable, setIsDraggable] = useState(false);
-    const [position, setPosition] = useState({x: -100, y: -100});
-
+const Doclist_section = ({ data, onDelete, refetch, handleDraggingState }) => {
     const { goToDocview } = useNavigation();
+
+    // ─── State ────────────────────────────────────────────────────────────────
+    const [isDraggable, setIsDraggable] = useState(false);
+    const [position, setPosition] = useState({ x: -100, y: -100 });
 
     const ref = useRef(null);
     const timeOutRef = useRef(null);
-
     const dragPreview = useRef(null);
 
+    // ─── DnD 설정 ─────────────────────────────────────────────────────────────
+    // 500ms 이상 누르고 있을 때만 드래그 가능 (오인 드래그 방지)
     const [, dragRef, previewRef] = useDrag({
         type: 'DOC',
         item: { data },
         canDrag: () => isDraggable,
-    })
+    });
 
-    console.log("📍 doclist section ");
-
-    
-    const handleMouseDown = (event) => {
-        console.log('handleMouseDown');
-        setPosition({ x: event.clientX, y: event.clientY });
-        
-        timeOutRef.current = setTimeout(() => {
-            setIsDraggable(true);
-            console.log('isDraggable: ', isDraggable);
-            handleDraggingState(true);
-        }, 500);
-    }
-
-    const handleMouseUp = () => {
-        console.log('handleMouseUp');
-        clearTimeout(timeOutRef.current);
-        setIsDraggable(false);
-        handleDraggingState(false);
-    }
-    
     dragRef(ref);
     previewRef(dragPreview);
 
+    // ─── Handlers ─────────────────────────────────────────────────────────────
+
+    // 500ms 유지 시 드래그 모드 활성화
+    const handleMouseDown = (event) => {
+        setPosition({ x: event.clientX, y: event.clientY });
+        timeOutRef.current = setTimeout(() => {
+            setIsDraggable(true);
+            handleDraggingState(true);
+        }, 500);
+    };
+
+    const handleMouseUp = () => {
+        clearTimeout(timeOutRef.current);
+        setIsDraggable(false);
+        handleDraggingState(false);
+    };
+
     const handleClick = (docId) => {
-        console.log('Document ID:', docId);
         goToDocview(docId);
-    }
+    };
 
     const handleDelete = () => {
-
         Swal.fire({
             title: '정말 삭제하시겠습니까?',
             text: "삭제된 문서는 영원히 사라집니다.",
@@ -92,50 +86,43 @@ const Doclist_section = ({key, data, onDelete, refetch, handleDraggingState}) =>
             cancelButtonText: '아, 잘못눌렀다.',
             customClass: {
                 confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger'
+                cancelButton: 'btn btn-danger',
             },
         }).then((result) => {
             if (result.isConfirmed) {
                 onDelete();
-
                 alert("삭제 완료");
-
-                console.log("✅ deteted and refetched");
-            } else if (result.isCancelled) {
-                console.log('Delete canceled');
             }
         });
+    };
 
-    }
+    // ─── Render ───────────────────────────────────────────────────────────────
 
     return (
         <>
-        <div 
-            class="book" 
-            ref={ref}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            // onMouseMove={handleMouseMove}
-        >
-            <div class="book-page">
-
-                <div class="cover">
-                    {/* <img src="book_cover.jpg" alt="book cover" /> */}
-                </div>
-                <div class="category-tag">
-                    <div>{data.category}</div>
-                </div>
-                <div class="title-library">{data.title}</div>
-                <div class="date">{data.updatedAt}</div>
-                <div class="actions">
-                    <button class="update library-btn button" onClick={()=>handleClick(data._id)}>수정</button>
-                    <button class="delete library-btn button" onClick={handleDelete}>삭제</button>
+            <div
+                className="book"
+                ref={ref}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+            >
+                <div className="book-page">
+                    <div className="cover" />
+                    <div className="category-tag">
+                        <div>{data.category}</div>
+                    </div>
+                    <div className="title-library">{data.title}</div>
+                    <div className="date">{data.updatedAt}</div>
+                    <div className="actions">
+                        <button className="update library-btn button" onClick={() => handleClick(data._id)}>수정</button>
+                        <button className="delete library-btn button" onClick={handleDelete}>삭제</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <CustomDragLayer/>
+            <CustomDragLayer />
         </>
-    )
-}
+    );
+};
+
 export default Doclist_section;
