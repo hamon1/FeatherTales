@@ -209,7 +209,6 @@ const Mailbox = () => {
                     <button onClick={() => handleSearch()}>검색</button>
                     {searchedFriend()}
                 </div>
-                <button onClick={handleSendRequest}>친구 요청</button>
                 <button onClick={handleGetRequests}>친구 요청 새로고침</button>
                 {!isReload ? (
                     requestList()
