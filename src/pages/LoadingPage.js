@@ -6,14 +6,12 @@ function LoadingPage({ isLoading }) {
     const TIMEOUT_LIMIT = 10000;
 
     useEffect(() => {
+        if (!isLoading) return;
+
         const timeoutId = setTimeout(() => {
             console.log("로딩 지연. 로그인 페이지 이동");
             goToLogin();
         }, TIMEOUT_LIMIT);
-
-        if (!isLoading ) {
-            clearTimeout(timeoutId);
-        }
 
         return () => clearTimeout(timeoutId);
     }, [isLoading]);
