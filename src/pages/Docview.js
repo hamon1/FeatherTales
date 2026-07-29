@@ -169,8 +169,8 @@ const Docview = () => {
                         </textarea>
                         </div>
                     <div class="actions">
-                        <button onClick={() => handleDocData().then(console.log('저장 완료!'))}>저장</button>
-                        <button onClick={() => handleDeleteDoc(token, docId).then(goToLibrary())}>삭제</button>
+                        <button onClick={() => handleDocData().then(() => console.log('저장 완료!'))}>저장</button>
+                        <button onClick={() => handleDeleteDoc(token, docId).then(() => goToLibrary())}>삭제</button>
                         <button onClick={() => goToLibrary()}>뒤로가기</button>
                     </div>
                 </div>
