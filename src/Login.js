@@ -1,18 +1,12 @@
 import React, {useContext, useState} from 'react';
 import { useNavigate } from'react-router-dom';
-import {api, loginUser, getUserData, getRoomData, getDocs } from './api';
-import {UserContext} from './contexts/UserContext';
+import {loginUser, getUserData, getRoomData, getDocs } from './api';
 import {RoomContext} from './contexts/RoomContext';
-
-import { UseFetchUserData } from './hooks/useFetchUserData';
-
-import { useUserQuery } from './hooks/useUserQuery';
 import { useQueryClient } from '@tanstack/react-query';
 
 import MovigObject from './pages/MovingObject';
 
 const Login = () => {
-    const { setUser } = useContext(UserContext);
     const { setRoom } = useContext(RoomContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

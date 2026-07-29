@@ -1,9 +1,8 @@
 import React, {useRef, useState} from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 
 import { useDocUpdateMutation } from '../hooks/useDocumentQuery'
 import { useCategoriseDeleteMutation } from '../hooks/useUserQuery';
-import { deleteCategory, getDocsFromCategory } from '../api';
 
 export const CategorySection = ({category, index, editMode, selectedCategory, setCategoryDocsData, setSelectedCategory}) => {
     const token = sessionStorage.getItem('token');

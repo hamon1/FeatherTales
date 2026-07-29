@@ -25,7 +25,7 @@ const Mailbox = () => {
     const [ query, setQuery ] = useState();
     const [searchResult, setSearchResult] = useState([]);
 
-    const { token } = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     const handleGetRequests = async() => {
         setIsReload(true);

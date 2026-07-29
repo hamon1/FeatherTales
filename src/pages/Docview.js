@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { api, createDoc, updateDoc, getDocsbyDocId } from '../api';
+import { createDoc, updateDoc, getDocsbyDocId } from '../api';
 import { UserContext } from '../contexts/UserContext';
 // import { UserService } from '../services/UserService';
 
@@ -13,7 +13,6 @@ import { useNavigation } from '../utils/navigate';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { handleDeleteDoc } from '../utils/docUtils';
-import { DocsContext } from '../contexts/DocContext';
 
 const Docview = () => {
     const token = sessionStorage.getItem('token');

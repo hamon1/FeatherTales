@@ -1,10 +1,9 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs, addCategory, getCategories } from '../api';
+import React, { useState, useContext, useEffect } from 'react';
+import { deleteDoc } from '../api';
 import { useNavigation } from '../utils/navigate';
 import { UserContext } from '../contexts/UserContext';
-import { DocsContext } from '../contexts/DocContext';
 
-import { useUserQuery, useUserUpdateMutation, useCategoriseUpdateMutation } from '../hooks/useUserQuery';
+import { useUserQuery, useCategoriseUpdateMutation } from '../hooks/useUserQuery';
 
 import { useDocumentQuery } from "../hooks/useDocumentQuery";
 
@@ -12,16 +11,10 @@ import Doclist_section from '../components/doclist_section';
 import { CategorySection } from '../components/category_section';
 import Loading from './Loading';
 
-import { handleDeleteDoc } from '.././utils/docUtils';
-
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useNavigate } from 'react-router-dom';
 
 import { getDocsFromCategory } from '../api';
 
 const Library = () => {
-    const navigate = useNavigate();
     const token = sessionStorage.getItem('token');
 
     const { goToLogin } = useNavigation();

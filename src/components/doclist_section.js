@@ -1,11 +1,9 @@
 import React, {useRef, useState, useEffect} from 'react';
 import { useNavigation } from '../utils/navigate';
 
-import { api, deleteDoc } from '../api';
-
 import Swal from "sweetalert2";
 
-import { DndProvider, useDrag, useDrop, useDragLayer } from 'react-dnd';
+import { useDrag, useDrop, useDragLayer } from 'react-dnd';
 
 const CustomDragLayer = () => {
     const { isDragging, currentOffset } = useDragLayer((monitor) => ({

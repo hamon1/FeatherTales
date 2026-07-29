@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import { api } from '../api';
-import { useFetchUserData } from '../hooks/useFetchUserData';
-
 import { useNavigation } from '../utils/navigate';
 
 import { useUserQuery, useUserUpdateMutation } from '../hooks/useUserQuery';

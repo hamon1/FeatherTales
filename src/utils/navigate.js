@@ -13,5 +13,5 @@ export const useNavigation = () => {
     const goToDocview = (docId) => navigate(`/docview/${docId}`);
     const goToMailbox = () => navigate('/mailbox');
 
-    return { goToLogin, goToHome, goToCustomize, goToMain, goToProfile, goToProfile, goToLibrary, goToDocview, goToMailbox };
+    return { goToLogin, goToHome, goToCustomize, goToMain, goToProfile, goToLibrary, goToDocview, goToMailbox };
 }

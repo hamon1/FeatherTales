@@ -1,4 +1,4 @@
-import { api, createDoc, updateDoc, deleteDoc, searchDocs, getDocs } from '../api';
+import { deleteDoc } from '../api';
 
 export const handleDeleteDoc = async (token, docId) => {
     console.log('handleDeleteDoc', docId);
